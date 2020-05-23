@@ -1,0 +1,156 @@
+class Solution {
+public:
+    /**
+     * @param maze: the maze
+     * @param ball: the ball position
+     * @param hole: the hole position
+     * @return: the lexicographically smallest way
+     */
+    
+    int min_Path=INT_MAX;
+    vector<vector<int>> nextLoc(vector<vector<int>> &maze, vector<int> &ball, vector<int> &hole){
+        vector<vector<int>> Res;
+        vector<int> tmp, tmp1,tmp2,tmp3;
+        int i=1;
+        //up
+        if (ball[0]-1>=0&&maze[ball[0]-1][ball[1]]==0){
+            //如果可以往上走
+            while(ball[0]-i>=0&&maze[ball[0]-i][ball[1]]==0) {
+                if (ball[0]-i==hole[0]&&ball[1]==hole[1]) {i++; break;}
+                i++;
+            }
+            tmp.push_back(ball[0]-(i-1));
+            tmp.push_back(ball[1]);
+        }
+        else{
+            tmp.push_back(-1);
+            tmp.push_back(-1);
+        }
+        i=1;
+        //left
+        if (ball[1]-1>=0&&maze[ball[0]][ball[1]-1]==0){
+            //如果可以往左走
+            while(ball[1]-i>=0&&maze[ball[0]][ball[1]-i]==0) {
+                if (ball[0]==hole[0]&&ball[1]-i==hole[1]) {i++; break;}
+                //i++抵消后面的i--
+                i++;
+            }
+            tmp1.push_back(ball[0]);
+            tmp1.push_back(ball[1]-(i-1));
+            
+        }
+        else{
+            tmp1.push_back(-1);
+            tmp1.push_back(-1);
+        }
+        i=1;
+        //down
+        if (ball[0]+1<maze.size()&&maze[ball[0]+1][ball[1]]==0){
+            //如果可以往下走
+            while(ball[0]+i<maze.size()&&maze[ball[0]+i][ball[1]]==0) {
+                if (ball[0]+i==hole[0]&&ball[1]==hole[1]) {i++; break;}
+                i++;
+            }
+            tmp2.push_back(ball[0]+(i-1));
+            tmp2.push_back(ball[1]);
+        }
+        else{
+            tmp2.push_back(-1);
+            tmp2.push_back(-1);
+        }
+        i=1;
+        //right
+        if (ball[1]+1<maze[0].size()&&maze[ball[0]][ball[1]+1]==0){
+            //如果可以往右走
+            while(ball[1]+i<maze[0].size()&&maze[ball[0]][ball[1]+i]==0) {
+                if (ball[1]+i==hole[1]&&ball[0]==hole[0]) {i++; break;}
+                i++;
+            }
+            tmp3.push_back(ball[0]);
+            tmp3.push_back(ball[1]+(i-1));
+        }
+        else{
+            tmp3.push_back(-1);
+            tmp3.push_back(-1);
+        }
+        Res.push_back(tmp);
+        Res.push_back(tmp1);
+        Res.push_back(tmp2);
+        Res.push_back(tmp3);
+        return Res;
+    }
+    //dir is -1 at the beginning, 防止走回头路
+    bool helper(vector<vector<int>> &maze, vector<int> &ball, vector<int> &hole, int& count, string & path, string & tmp, int & dir){
+        if (ball[0]==hole[0]&&ball[1]==hole[1]){
+            if (count<min_Path){
+                min_Path=count;
+                count=0;
+                path=tmp;
+                tmp="";
+    
+            }
+            return true;
+        }
+        vector<vector<int>> Res=nextLoc(maze,ball,hole);
+        for (unsigned int i=0;i<Res.size();i++){
+            if (Res[i][0]==hole[0]&&Res[i][1]==hole[1]){
+                int step=abs(Res[i][0]+Res[i][1]-ball[0]-ball[1]);
+                count+=step;
+                if (i==0) tmp+='u';
+                else if (i==1) tmp+='l';
+                else if (i==2) tmp+='d';
+                else tmp+='r';
+                if (count<min_Path){
+                    min_Path=count;
+                    count=0;
+                    path=tmp;
+                    tmp="";
+                    
+                }
+                return true;
+            }
+        }
+        for (unsigned int i=0;i<Res.size();i++){
+            //走不通
+            int tmp_dir=dir;
+            bool walkback=false;
+            if ((i==0&&dir==2)||(i==1&&dir==3)||(i==2&&dir==0)||(i==3&&dir==1)) walkback=true;
+            if ((Res[i][0]==-1&&Res[i][1]==-1)||walkback) continue;
+            int step=abs(Res[i][0]+Res[i][1]-ball[0]-ball[1]);
+            count+=step;
+            string s=tmp;
+            if (i==0) tmp+='u';
+            else if (i==1) tmp+='l';
+            else if (i==2) tmp+='d';
+            else tmp+='r';
+            dir=i;
+            if (helper(maze,Res[i],hole,count,path,tmp,dir)) return true;
+            tmp=s;
+            dir=tmp_dir;
+            count-=step;
+        }
+        return false;
+    }
+    string findShortestWay(vector<vector<int>> &maze, vector<int> &ball, vector<int> &hole) {
+        // write your code here
+        for (unsigned int i=0;i<maze.size();i++){
+            for (unsigned int j=0;j<maze[0].size();j++){
+                cout<<maze[i][j]<<" ";
+            }
+            cout<<endl;
+        }
+    //    vector<vector<int>> Loc=nextLoc(maze,ball,hole);
+    //    cout<<Loc[0][0]<<" "<<Loc[0][1]<<endl;
+    //    cout<<Loc[1][0]<<" "<<Loc[1][1]<<endl;
+    //    cout<<Loc[2][0]<<" "<<Loc[2][1]<<endl;
+    //    cout<<Loc[3][0]<<" "<<Loc[3][1]<<endl;
+        if (maze[hole[0]][hole[1]]==1) return "impossible";
+        string tmp="",path;
+        int count=0,dir=-1;
+        helper(maze,ball,hole,count,path,tmp,dir);
+        if (path=="") return "impossible";
+        cout<<min_Path<<endl;
+        return path;
+        //确保hole所在的位置不是block
+    }
+};
