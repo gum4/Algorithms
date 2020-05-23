@@ -1,0 +1,120 @@
+//Leetcode 131: The Skyline Problem
+
+class Solution {
+public:
+    /**
+     * @param buildings: A list of lists of integers
+     * @return: Find the outline of those buildings
+     */
+     
+    //知道了哪一个位置在第一次循环时被更新了，更新整个map
+    //因为已经是一个map了，前一个方块的右端一定小于后一个方块的左端，所以只要检查新加入的一个iterator跨越了哪些已有的block
+    //对vector<int> Heights 和 map<int,int>& STOR 进行更新
+    void update(map<int,int>& STOR, vector<int> &H,  vector<int> V,int h){
+        map<int,int> Res;
+        int count=0;
+        bool add_at_end=false;
+        map<int,int>::iterator itr;
+        for (itr=STOR.begin();itr!=STOR.end();){
+            if (itr->second<V[0]||itr->first>V[1]){
+                Res[itr->first]=itr->second;
+                itr++;
+                if (itr==STOR.end()||itr->first>V[1]){
+                    Res[V[0]]=V[1];
+                    if (itr==STOR.end()){
+                        add_at_end=true;
+                    }
+                }
+                
+            }
+            if (itr->second>=V[0]&&count==0){
+                int left=min(itr->first,V[0]);
+                int right=0;
+                map<int,int>::iterator itr1=itr;
+                while (itr1->first<=V[1]&&itr1!=STOR.end()){
+                    right=max(itr1->second,V[1]);
+                    itr1++;
+                }
+                Res[left]=right;
+                
+                itr=itr1;
+                count++;
+            }
+            
+        }
+        for (itr=Res.begin();itr!=Res.end();itr++){
+            //V被加在了这个区间内
+            if (itr->first<=V[0]&&itr->second>=V[1]){
+                if (add_at_end){
+                    int fix=H.size();
+                    for (unsigned int i=1;i<=V[0]-1-fix;i++)
+                        H.push_back(0);
+                }
+                for (unsigned int i=V[0]-1;i<V[1]-1;i++){
+                    if (i<H.size())
+                        H[i]=max(H[i],h);
+            //最后一个位置防止越界
+                    else
+                        H.push_back(h);
+                }
+                break;
+            }
+        }
+        //V被单独加在原先的最后一个位置之后
+        STOR=Res;
+    }
+    
+    vector<vector<int>> buildingOutline(vector<vector<int>> &buildings) {
+        // write your code here
+        vector<vector<int>> out;
+        if (buildings.size()==0) return out;
+        vector<int> Heights;
+        map<int,int> Res;
+        Res[buildings[0][0]]=buildings[0][1];
+        for (unsigned int i=1;i<=buildings[0][1]-buildings[0][0];i++){
+            Heights.push_back(buildings[0][2]);
+        }
+        int i=1;
+        while (i<buildings.size()){
+            int h=buildings[i][2];
+            vector<int> tmp;
+            tmp.push_back(buildings[i][0]);
+            tmp.push_back(buildings[i][1]);
+            update(Res,Heights,tmp,h);
+            i++;
+        }
+        map<int,int>::iterator itr;
+        int gap=Res.begin()->first;
+        
+        vector<vector<int>> stor;
+        int rec=Heights[0];
+        for (unsigned int i=0;i<Heights.size();){
+            int j=i;
+            while (Heights[j]==rec&&j<Heights.size()){
+                j++;
+            }
+            vector<int> tmp;
+            tmp.push_back(rec);
+            tmp.push_back(j-i);
+            stor.push_back(tmp);
+            i=j;
+            rec=Heights[j];
+            
+        }
+        int c=gap;
+        for (unsigned int i=0;i<stor.size();i++) {
+            if (stor[i][0]==0) {
+                c+=stor[i][1];
+                continue;
+            }
+            vector<int> tmp;
+            tmp.push_back(c);
+            tmp.push_back(c+stor[i][1]);
+            tmp.push_back(stor[i][0]);
+            out.push_back(tmp);
+            c+=stor[i][1];
+        }
+        return out;
+        
+    }
+};
