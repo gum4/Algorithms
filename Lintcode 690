@@ -1,0 +1,48 @@
+class Solution {
+public:
+    /**
+     * @param n: an integer
+     * @return:  the factorial of n
+     */
+    string factorial(int n) {
+        // write your code here
+        //cout<<(int)log10(107)+1<<endl;
+        //每一次需要动态更新vector的size
+        vector<int> Res;
+        Res.push_back(1);
+        int index=2;
+        while (index<=n){
+            vector<int> Res1;
+            int extra=(int)(log10(Res[Res.size()-1]*index))+1;
+            for (unsigned int i=1;i<=Res.size()+extra;i++){
+                Res1.push_back(0);
+            }
+            for (unsigned int i=0;i<Res.size();i++){
+                int tmp=Res[i]*index;
+                int j=i;
+                while (tmp>0){
+                    Res1[j]+=tmp%10;
+                    if (Res1[j]>=10){
+                        int t=Res1[j];
+                        Res1[j]=t%10;
+                        Res1[j+1]+=t/10;
+                    }
+                    tmp/=10;
+                    j++;
+                }
+            }
+            int remov=Res1.size()-1;
+            while(Res1[remov]==0){
+                Res1.pop_back();
+                remov--;
+            }
+            Res=Res1;
+            index++;
+        }
+        string s="";
+        for (unsigned int i=0;i<Res.size();i++){
+            s=to_string(Res[i])+s;
+        }
+        return s;
+    }
+};
