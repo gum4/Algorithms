@@ -1,0 +1,121 @@
+class Solution {
+public:
+    vector<vector<int> > area(int i, int j){
+        vector<int> v1;
+        vector<int> v2;
+        vector<vector<int> > V;
+        if (0<=i&&i<=2){
+            if (0<=j&&j<=2) {
+                v1.push_back(0);
+                v1.push_back(2);
+                v2.push_back(0);
+                v2.push_back(2);
+            }
+            else if (3<=j&&j<=5){
+                v1.push_back(0);
+                v1.push_back(2);
+                v2.push_back(3);
+                v2.push_back(5);
+            }
+            else{
+                v1.push_back(0);
+                v1.push_back(2);
+                v2.push_back(6);
+                v2.push_back(8);
+            }
+        }
+        if (3<=i&&i<=5){
+            if (0<=j&&j<=2) {
+                v1.push_back(3);
+                v1.push_back(5);
+                v2.push_back(0);
+                v2.push_back(2);
+            }
+            else if (3<=j&&j<=5){
+                v1.push_back(3);
+                v1.push_back(5);
+                v2.push_back(3);
+                v2.push_back(5);
+            }
+            else{
+                v1.push_back(3);
+                v1.push_back(5);
+                v2.push_back(6);
+                v2.push_back(8);
+            }
+        }
+        if (6<=i&&i<=8){
+            if (0<=j&&j<=2) {
+                v1.push_back(6);
+                v1.push_back(8);
+                v2.push_back(0);
+                v2.push_back(2);
+            }
+            else if (3<=j&&j<=5){
+                v1.push_back(6);
+                v1.push_back(8);
+                v2.push_back(3);
+                v2.push_back(5);
+            }
+            else{
+                v1.push_back(6);
+                v1.push_back(8);
+                v2.push_back(6);
+                v2.push_back(8);
+            }
+        }
+        V.push_back(v1);
+        V.push_back(v2);
+        return V;
+    }
+    set<int> content(vector<vector<char> >& board, int i, int j){
+        set<int> Whole;
+        for (int c=1;c<=9;c++){
+            Whole.insert(c);
+        }
+        set<int> Res;
+        unsigned int k;
+        for (k=0;k<9;k++){
+            if (board[i][k]!='.')
+                Res.insert(board[i][k]-'0');
+            if (board[k][j]!='.')
+                Res.insert(board[k][j]-'0');
+        }
+        vector<vector<int> > V=area(i,j);
+        for (unsigned int p=V[0][0];p<=V[0][1];p++){
+            for (unsigned int q=V[1][0];q<=V[1][1];q++){
+                if (board[p][q]!='.'){
+                    Res.insert(board[p][q]-'0');
+                }
+            }
+        }
+        for (set<int>::iterator itr=Res.begin();itr!=Res.end();itr++){
+            Whole.erase(*itr);
+        }
+        return Whole;
+    }
+    bool Fill (vector<vector<char> >& board, int& i, int & j){
+        if (i==9) return true;
+        int next_x, next_y;
+        if (j<8) {next_x=i;next_y=j+1;}
+        else {next_x=i+1;next_y=0;}
+        //No need to fill in the current location
+        if (board[i][j]!='.') {
+            return Fill(board,next_x,next_y);
+        }
+        set<int> tmp=content(board,i,j);
+        for (set<int>::iterator itr=tmp.begin();itr!=tmp.end();itr++){
+            //this turn is just a trial
+            board[i][j]=*itr+'0';
+            //The next location is OK with the current board[i][j]
+            if (Fill(board,next_x,next_y)) return true;
+            board[i][j]='.';
+        }
+        //tmp.size()==0, or 当前的每一种尝试都被退回, then return false
+        return false;
+    }
+    void solveSudoku(vector<vector<char>>& board) {
+        int x=0,y=0;
+        Fill(board,x,y);
+    }
+};
