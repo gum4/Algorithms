@@ -1,0 +1,33 @@
+class Solution {
+public:
+    /**
+     * @param nums: 4 cards
+     * @return: whether they could get the value of 24
+     */
+    
+    
+    bool helper (vector<double> & nums,int target){
+        // for (unsigned int i=0;i<nums.size();i++){
+        //     cout<<nums[i]<<" ";
+        // }
+        // cout<<":"<<target<<endl;
+        if (nums.size()==1){
+            if (nums[0]==target) return true;
+            return false;
+        }
+        for (unsigned int i=0;i<nums.size();i++){
+            double tmp=nums[i];
+            nums.erase(nums.begin()+i);
+            
+            if (helper(nums,target+tmp)||helper(nums,target-tmp)||helper(nums,target/tmp)||helper(nums,target*tmp)) return true;
+            nums.insert(nums.begin()+i,tmp);
+        }
+        return false;
+    }
+    bool compute24(vector<double> &nums) {
+        // write your code here
+        //vector<int> flag(nums.size(),0);
+        sort(nums.begin(),nums.end());
+        return helper(nums,24);
+    }
+};
