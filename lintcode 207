@@ -1,0 +1,41 @@
+class Solution {
+public:
+    /*
+     * @param s: A string
+     * @param dict: A dictionary of words dict
+     * @return: A boolean
+     */
+    bool wordBreak(string &s, unordered_set<string> &dict) {
+        // write your code here
+        if (s=="") return true;
+        vector<string> H;
+        H.push_back(s);
+        unordered_set<string>::iterator ITR,Itr;
+        ITR=dict.begin();
+        while(ITR!=dict.end())
+        {
+            string::size_type pos;
+            //unordered_set<string>::iterator itr;
+            for (unsigned int i=0;i<H.size();i++){
+                pos=H[i].find(*ITR);
+                string tmp=H[i];
+                while (pos!=tmp.npos){
+                    if (pos==0&&tmp.length()==(*ITR).length()) return true;
+                    string s1=tmp.substr(0,pos);
+                    string s2=tmp.substr(pos+(*ITR).length(),tmp.length()-pos-(*ITR).length());
+                    tmp=s1+s2;
+                    H.push_back(tmp);
+                    pos=tmp.find(*ITR);
+                }
+                
+            }
+            // cout<<(*ITR)<<" : ";
+            // for (unsigned int i=0;i<H.size();i++){
+            //     cout<<H[i]<<" ";
+            // }
+            // cout<<endl;
+            ITR++;
+        }
+        return false;
+    }
+};
