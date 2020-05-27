@@ -1,0 +1,73 @@
+/**
+ * Definition of Interval:
+ * classs Interval {
+ *     int start, end;
+ *     Interval(int start, int end) {
+ *         this->start = start;
+ *         this->end = end;
+ *     }
+ * }
+ */
+
+class Solution {
+public:
+    /**
+     * @param intervals: Sorted interval list.
+     * @param newInterval: new interval.
+     * @return: A new interval list.
+     */
+   map<int,int> update(map<int,int>& STOR,   vector<int> V){
+        map<int,int> Res;
+        int count=0;
+        bool check=false;
+        map<int,int>::iterator itr;
+        for (itr=STOR.begin();itr!=STOR.end();){
+            //cout<<itr->first<<" "<<itr->second<<endl;
+            if (itr->second<V[0]||itr->first>V[1]){
+                Res[itr->first]=itr->second;
+                itr++;
+                if (count==0&&(itr==STOR.end()||itr->first>V[1])){
+                    Res[V[0]]=V[1];
+                    check=true;
+                    if (itr==STOR.end()){
+                    }
+                }
+                
+            }
+            if (itr->second>=V[0]&&count==0){
+                int left=min(itr->first,V[0]);
+                int right=0;
+                map<int,int>::iterator itr1=itr;
+                while (itr1->first<=V[1]&&itr1!=STOR.end()){
+                    right=max(itr1->second,V[1]);
+                    itr1++;
+                }
+                if (!check)
+                Res[left]=right;
+                cout<<left<<"   "<<right<<endl;
+                itr=itr1;
+                count++;
+            }
+            
+        }
+       
+        return Res;
+    }
+    vector<Interval> insert(vector<Interval> &intervals, Interval newInterval) {
+        // write your code here
+        map<int,int> M,M1;
+        for (unsigned int i=0;i<intervals.size();i++){
+            M[intervals[i].start]=intervals[i].end;
+        }
+        vector<int> V{newInterval.start,newInterval.end};
+        M1=update(M,V);
+        // for (map<int,int>::iterator itr=M1.begin();itr!=M1.end();itr++){
+        //     cout<<"("<<itr->first<<","<<itr->second<<")"<<endl;
+        // }
+        vector<Interval> Res;
+        for (map<int,int>::iterator itr=M1.begin();itr!=M1.end();itr++){
+            Res.push_back(Interval(itr->first,itr->second));
+        }
+        return Res;
+    }
+};
