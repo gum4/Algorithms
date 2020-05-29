@@ -1,0 +1,26 @@
+class Solution {
+public:
+    /**
+     * @param m: An integer m denotes the size of a backpack
+     * @param A: Given n items with size A[i]
+     * @return: The maximum size
+     */
+     //A中的位置i之后找出总重量小于W的最大总重量
+     
+    
+    int backPack(int m, vector<int> &A) {
+        int n = A.size();
+        vector<int> dp(m + 1, 0);
+        //第一重循环是有几个物体的选项了
+        for (int i = 0; i < n; ++i) {
+            //第二重循环是总重量为k的时候根据已有的选项选最大的
+            for (int k = m; k >= A[i]; --k) {  
+                dp[k] = max(dp[k], dp[k - A[i]] + A[i]);
+            }
+        }
+        return dp[m];
+
+        
+        
+    }
+};
