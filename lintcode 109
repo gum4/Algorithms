@@ -1,0 +1,28 @@
+class Solution {
+public:
+    /**
+     * @param triangle: a list of lists of integers
+     * @return: An integer, minimum path sum
+     */
+    int minimumTotal(vector<vector<int>> &triangle) {
+        // write your code here
+        vector<vector<int>> STOR=triangle;
+        
+        for (unsigned int i=1;i<STOR.size();i++){
+            STOR[i][0]=STOR[i-1][0]+triangle[i][0];
+            STOR[i][i]=STOR[i-1][i-1]+triangle[i][i];
+            for (unsigned int j=1;j<i;j++){
+                STOR[i][j]=min(STOR[i-1][j-1],STOR[i-1][j])+triangle[i][j];
+            }
+        }
+        vector<int>::iterator itr=min_element(STOR[STOR.size()-1].begin(),STOR[STOR.size()-1].end());
+        // for (unsigned int i=0;i<STOR.size();i++){
+            
+        //     for (unsigned int j=0;j<=i;j++){
+        //         cout<<STOR[i][j]<<" ";
+        //     }
+        //     cout<<endl;
+        // }
+        return *itr;
+    }
+};
