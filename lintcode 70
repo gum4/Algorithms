@@ -1,0 +1,57 @@
+/**
+ * Definition of TreeNode:
+ * class TreeNode {
+ * public:
+ *     int val;
+ *     TreeNode *left, *right;
+ *     TreeNode(int val) {
+ *         this->val = val;
+ *         this->left = this->right = NULL;
+ *     }
+ * }
+ */
+
+class Solution {
+public:
+    /**
+     * @param root: A tree
+     * @return: buttom-up level order a list of lists of integer
+     */
+    
+    void helper (vector<TreeNode*>& V, vector<vector<int>>& res){
+        if (V.size()==0) return;
+        
+        vector<TreeNode*> V1;
+        vector<int> r;
+        // for (unsigned int i=0;i<V.size();i++){
+        //     r.push_back(V[i]->val);
+        // }
+        for (unsigned int i=0;i<V.size();i++){
+            if (V[i]->left) {
+                V1.push_back(V[i]->left);
+                //r.push_back(V1[i]->left->val);
+            }
+            if (V[i]->right) {
+                V1.push_back(V[i]->right);
+                //r.push_back(V1[i]->right->val);
+            }
+        }
+        helper(V1,res);
+        for (unsigned int i=0;i<V.size();i++){
+            r.push_back(V[i]->val);
+        }
+        res.push_back(r);
+        return ;
+    }
+    vector<vector<int>> levelOrderBottom(TreeNode * root) {
+        // write your code here
+        vector<vector<int>> res;
+        if (!root) return res;
+        
+        vector<TreeNode*> V;
+        V.push_back(root);
+        helper(V,res);
+        return res;
+        
+    }
+};
