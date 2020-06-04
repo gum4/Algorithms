@@ -1,0 +1,42 @@
+class Solution {
+public:
+    /**
+     * @param nums: A list of integers
+     * @return: A list of integers
+     */
+    void swap (vector<int>& nums, int i, int j){
+        int tmp;
+        tmp=nums[i];
+        nums[i]=nums[j];
+        nums[j]=tmp;
+    }
+    vector<int> nextPermutation(vector<int> &nums) {
+        // write your code here
+        int index=nums.size()-1;
+        int first_larger=index;
+        while (index>0&&nums[index-1]>=nums[index]){
+            index--;
+        }
+        while(first_larger>0&&nums[first_larger-1]==nums[first_larger]){
+            first_larger--;
+        }
+        //所有元素一样
+        if (first_larger==0) return nums;
+        //单调减 （当前为最大排列）
+        if (index==0){
+            sort(nums.begin(),nums.end());
+            return nums;
+        }
+        //从第index-1往后找比nums[index-1]大的最小的数的位置
+        int i;
+        for (i=nums.size()-1;i>=index;i--){
+            if (nums[i]>nums[index-1]){
+                break;
+            }
+        }
+        swap(nums,index-1,i);
+        sort(nums.begin()+index,nums.end());
+        return nums;
+        
+    }
+};
