@@ -12,117 +12,62 @@ public:
         //use_full 判断第一位是不是三个元素
         bool use_full=false;
         if (k>pow(2,n-1)) use_full=true;
-        k--;
-        vector<long long> stor;
+        vector<int> stor;
         if (use_full){
-            long long ll=pow(2,n-1);
-            long long first;
-            if (k%ll==0) {
-                first=k/(pow(2,n-1));
-                stor.push_back(first);
-                k-=(first)*pow(2,n-1);
+            int first=k/pow(2,n-1);
+            if(k-first*pow(2,n-1)==0) stor.push_back(first);
+            else stor.push_back(first+1);
+            long long item=k-first*pow(2,n-1);
+            int digit=n-2;
+            while (item>0){
+                int f=item/pow(2,digit);
+                item-=f*pow(2,digit);
+                if (item==0) stor.push_back(f);
+                else stor.push_back(f+1);
+                digit--;
             }
-            else {
-                first=k/(pow(2,n-1))+1;
-                stor.push_back(first);
-                k-=(first-1)*pow(2,n-1);
-            }
-            //cout<<first%ll<<endl;
-            //cout<<first<<endl;
-            
-            cout<<k<<endl;
-            int index=n-2;
-            while (index>=0){
-                long long tmp;
-                long long l=pow(2,index);
-                if (k%ll==0){
-                    first=k/(pow(2,n-1));
-                    tmp=k/(pow(2,index));
-                    stor.push_back(tmp);
-                    k-=(tmp)*pow(2,index);
-                }  
-                else {
-                    first=k/(pow(2,n-1))+1;
-                    tmp=k/(pow(2,index))+1;
-                    stor.push_back(tmp);
-                    k-=(tmp-1)*pow(2,index);
-                }
-                index--;
-            }
-            string res="";
-            res+=('a'+stor[0]-1);
-            for (unsigned int i=1;i<stor.size();i++){
-                switch (res[i-1]){
-                    case 'a': if (stor[i]==1) res+='b';
-                        else res+='c'; break;
-                    case 'b': if (stor[i]==1) res+='a';
-                        else res+='c'; break;
-                    case 'c': if (stor[i]==1) res+='a';
-                        else res+='b'; break;
-                    default:break;
-                }
+            for (unsigned int i=0;i<digit+1;i++){
+                stor.push_back(2);
             }
             for (unsigned int i=0;i<stor.size();i++){
                 cout<<stor[i]<<" ";
             }
             cout<<endl;
-            return res;
-            
         }
         else{
-
-            long long ll=pow(2,n-1);
-            long long first;
-            if (k%ll==0) {
-                first=k/(pow(2,n-1));
-                stor.push_back(first);
-                k-=(first)*pow(2,n-1);
+            int item=k;
+            int digit=log2(item);
+            for (unsigned int i=0;i<n-digit-1;i++){
+                stor.push_back(1);
             }
-            else {
-                first=k/(pow(2,n-1))+1;
-                stor.push_back(first);
-                k-=(first-1)*pow(2,n-1);
+            while (item>0){
+                int f=item/pow(2,digit);
+                item-=f*pow(2,digit);
+                if (item==0) stor.push_back(f);
+                else stor.push_back(f+1);
+                digit--;
             }
-            //cout<<first%ll<<endl;
-            //cout<<first<<endl;
-            
-            cout<<k<<endl;
-            int index=n-2;
-            while (index>=0){
-                long long tmp;
-                long long l=pow(2,index);
-                if (k%ll==0){
-                    first=k/(pow(2,n-1));
-                    tmp=k/(pow(2,index));
-                    stor.push_back(tmp);
-                    k-=(tmp)*pow(2,index);
-                }  
-                else {
-                    first=k/(pow(2,n-1))+1;
-                    tmp=k/(pow(2,index))+1;
-                    stor.push_back(tmp);
-                    k-=(tmp-1)*pow(2,index);
-                }
-                index--;
-            }
-            string res="";
-            res+=('a'+stor[0]-1);
-            for (unsigned int i=1;i<stor.size();i++){
-                switch (res[i-1]){
-                    case 'a': if (stor[i]==1) res+='b';
-                        else res+='c'; break;
-                    case 'b': if (stor[i]==1) res+='a';
-                        else res+='c'; break;
-                    case 'c': if (stor[i]==1) res+='a';
-                        else res+='b'; break;
-                    default:break;
-                }
+            for (unsigned int i=0;i<digit+1;i++){
+                stor.push_back(2);
             }
             for (unsigned int i=0;i<stor.size();i++){
                 cout<<stor[i]<<" ";
             }
             cout<<endl;
-            return res;
         }
+        string res="";
+        res+=('a'+stor[0]-1);
+        for (unsigned int i=1;i<stor.size();i++){
+            switch (res[i-1]){
+                case 'a': if (stor[i]==1) res+='b';
+                    else res+='c'; break;
+                case 'b': if (stor[i]==1) res+='a';
+                    else res+='c'; break;
+                case 'c': if (stor[i]==1) res+='a';
+                    else res+='b'; break;
+                default:break;
+            }
+        }
+        return res;
     }
 };
