@@ -1,0 +1,62 @@
+class Solution {
+public:
+    /*
+     * @param n: The number of queens
+     * @return: All distinct solutions
+     */
+     
+//构造    vector<int> V
+//使得对任意下标 i,j 不存在abs(V[i]-V[j])==abs(i-j)
+    vector<string> MAKE(vector<int> & V){
+        string S(V.size(),'.');
+        vector<string> Vec(V.size(),S);
+        for (unsigned int i=0;i<V.size();i++){
+            Vec[i][V[i]]='Q';
+        }
+        return Vec;
+    }
+    bool isValid(vector<int>& queenCol, int row, int col) {
+        for (int i = 0; i < row; ++i) {
+            if (col == queenCol[i] || abs(row - i) == abs(col - queenCol[i])) return false;
+        }
+        return true;
+    }
+    void helper(vector<vector<int>> &Path, vector<int> & tmp, int n,int index){
+        if (index==n){
+            Path.push_back(tmp);
+            
+            // for (unsigned int i=0;i<tmp.size();i++) cout<<tmp[i]<<" ";
+            // cout<<endl;
+            return;
+        }
+        
+        //cout<<tmp.size()<<endl;
+        for (unsigned int i=0;i<n;i++){
+            
+            
+            if (isValid(tmp,index,i)) 
+            {
+                tmp[index]=i;
+                
+                helper(Path,tmp,n,index+1);
+                //第index位置为i之后的情况都试过了
+                
+                tmp[index]=-1;
+                //重置tmp[index]，进入下一重for循环
+            }
+        }
+        
+    }
+    vector<vector<string>> solveNQueens(int n) {
+        // write your code here
+        
+        vector<vector<int>> Path;
+        vector<vector<string>> Res;
+        vector<int> tmp(n,-1);
+        helper(Path,tmp,n,0);
+        for (unsigned int i=0;i<Path.size();i++){
+            Res.push_back(MAKE(Path[i]));
+        }
+        return Res;
+    }
+};
