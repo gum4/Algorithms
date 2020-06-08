@@ -1,0 +1,86 @@
+/**
+ * Definition of ListNode
+ * class ListNode {
+ * public:
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int val) {
+ *         this->val = val;
+ *         this->next = NULL;
+ *     }
+ * }
+ * Definition of TreeNode:
+ * class TreeNode {
+ * public:
+ *     int val;
+ *     TreeNode *left, *right;
+ *     TreeNode(int val) {
+ *         this->val = val;
+ *         this->left = this->right = NULL;
+ *     }
+ * }
+ */
+
+
+class Solution {
+public:
+    /*
+     * @param head: The first node of linked list.
+     * @return: a tree node
+     */
+    // TreeNode * helper(ListNode* START){
+    //     if (!START) return NULL;
+    //     if (!START->next){
+    //         TreeNode* R=new TreeNode (START->val);
+    //         return R;
+    //     }
+    //     ListNode* r=START->next;
+    //     TreeNode* R=new TreeNode(r->val);
+    //     R->left=new TreeNode(START->val);
+    //     R->right=helper(START->next->next);
+    //     return R;
+    // }
+    
+    TreeNode * helper(ListNode* &head, int  len){
+        if (len==0) return NULL;
+        if (len==1){
+            TreeNode* R=new TreeNode (head->val);
+            return R;
+        }
+        
+        ListNode* tmp=head;
+        ListNode* start=new ListNode(head->val);
+        ListNode* S=start;
+        for (unsigned int i=1;i<=(len-1)/2;i++){
+            tmp=tmp->next;
+            start->next=new ListNode(tmp->val);
+            start=start->next;
+        }
+        TreeNode* root=new TreeNode(tmp->val);
+        ListNode* right=tmp->next;
+
+        root->left=helper(S,(len-1)/2);
+        root->right=helper(right,len-1-(len-1)/2);
+        return root;
+    }
+    TreeNode * sortedListToBST(ListNode * head) {
+        // write your code here
+        if (!head) return NULL;
+        if (!head->next){
+            TreeNode* R=new TreeNode (head->val);
+            return R;
+        }
+        if (!head->next->next){
+            TreeNode* R=new TreeNode (head->val);
+            R->right=new TreeNode (head->next->val);
+            return R;
+        }
+        ListNode* tmp=head;
+        int len=0;
+        while (tmp){
+            len++;
+            tmp=tmp->next;
+        }
+        return helper(head,len);
+    }
+};
