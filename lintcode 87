@@ -1,0 +1,76 @@
+/**
+ * Definition of TreeNode:
+ * class TreeNode {
+ * public:
+ *     int val;
+ *     TreeNode *left, *right;
+ *     TreeNode(int val) {
+ *         this->val = val;
+ *         this->left = this->right = NULL;
+ *     }
+ * }
+ */
+
+
+class Solution {
+public:
+    /*
+     * @param root: The root of the binary search tree.
+     * @param value: Remove the node with given value.
+     * @return: The root of the binary search tree after removal.
+     */
+     
+     
+     TreeNode* helper(TreeNode* root, int value){
+         if (!root) return NULL;
+         if (root->val==value){
+             if (!root->left&&!root->right){
+                 return NULL;
+             }
+             if (!root->left){
+                 return root->right;
+             }
+             if (!root->right){
+                 return root->left;
+             }
+             TreeNode* root_l=root->left;
+             TreeNode* root_r=root->right;
+             TreeNode* tmp=root_l;
+             if (tmp->right){
+                 while (tmp->right->right){
+                     tmp=tmp->right;
+                 }
+                 TreeNode* RES;
+                 RES=tmp->right;
+                 tmp->right=NULL;
+                 RES->left=root_l;
+                 RES->right=root_r;
+                 return RES;
+             }
+             else{
+                 tmp->right=root_r;
+                 return tmp;
+             }
+             
+            //  TreeNode* root_l=root->left;
+            //  TreeNode* root_r=root->right;
+            //  TreeNode* tmp=root_l;
+            //  while(tmp){
+            //      TreeNode* tmp1=tmp->right;
+            //      tmp->right=root_r;
+            //      tmp=tmp->left;
+            //      root_r=tmp1;
+            //  }
+            //  return root_l;
+         }
+         root->left=helper(root->left,value);
+         root->right=helper(root->right,value);
+         return root;
+         
+     }
+    TreeNode * removeNode(TreeNode * root, int value) {
+        // write your code here
+        
+        return helper(root,value);
+    }
+};
