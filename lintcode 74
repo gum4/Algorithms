@@ -1,0 +1,43 @@
+/**
+ * class SVNRepo {
+ *     public:
+ *     static bool isBadVersion(int k);
+ * }
+ * you can use SVNRepo::isBadVersion(k) to judge whether 
+ * the kth code version is bad or not.
+*/
+class Solution {
+public:
+    /**
+     * @param n: An integer
+     * @return: An integer which is the first bad version.
+     */
+    int findFirstBadVersion(int n) {
+        // write your code here
+        //i=1,j=n   if xxx(k)==true xxx(k-1)==true  i=1 j=k-1 k=(i+j)/2
+        //if xxx(k)==false  i=k+1  j=n 
+        if (n==1) return 1;
+        if (SVNRepo::isBadVersion(1)==true) return 1;
+        if (SVNRepo::isBadVersion(n)==true&&SVNRepo::isBadVersion(n-1)==false) return n; 
+        int i=1,j=n;
+        while (i<j){
+            int k=(i+j+1)/2;
+            cout<<i<<" "<<j<<" "<<k<<endl;
+            // if (SVNRepo::isBadVersion(k)==true&&SVNRepo::isBadVersion(k-1)==false){
+            //     return k;
+            // }
+            if (SVNRepo::isBadVersion(k)==true){
+                if (SVNRepo::isBadVersion(k-1)==true)
+                j=k-1;
+                else return k;
+            }
+            else {
+                i=k+1;
+            }
+            if (i==j) return i;
+            if (i+1==j) return i;
+            
+        }
+        return -1;
+    }
+};
