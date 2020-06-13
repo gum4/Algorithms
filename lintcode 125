@@ -1,0 +1,27 @@
+class Solution {
+public:
+    /**
+     * @param m: An integer m denotes the size of a backpack
+     * @param A: Given n items with size A[i]
+     * @param V: Given n items with value V[i]
+     * @return: The maximum value
+     */
+    int backPackII(int m, vector<int> &A, vector<int> &V) {
+        // write your code here
+        //stor存储和为k的最大总价值
+        vector<int> dp(m+1,0);
+   
+        for (unsigned int i=0;i<A.size();i++){
+            for (unsigned int j=m;j>=A[i];j--){
+                dp[j] = max(dp[j], dp[j - A[i]] + V[i]);
+                // if (stor[j-A[i]]+V[i]<=stor[j]){
+                //     stor[j]=stor[j-A[i]];
+                // }
+                // else{
+                //     stor[j]=stor[j-A[i]]+V[i];
+                // }
+            }
+        }
+        return dp[m];
+    }
+};
