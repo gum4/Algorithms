@@ -1,0 +1,31 @@
+"""
+Definition of TreeNode:
+class TreeNode:
+    def __init__(self, val):
+        self.val = val
+        self.left, self.right = None, None
+"""
+class Solution:
+    # @paramn n: An integer
+    # @return: A list of root
+    def generateTrees(self, n):
+        # write your code here
+        #利用递归
+        return self.dfs(1, n)
+    
+    
+    def dfs(self, start, end):
+        if start > end:
+            return [None]
+        
+        res = []
+        for val in range(start, end+1):
+            left = self.dfs(start, val - 1)
+            right = self.dfs(val+1, end)
+            for i in left:
+                for j in right:
+                    root = TreeNode(val)
+                    root.left = i
+                    root.right = j
+                    res.append(root)
+        return res
