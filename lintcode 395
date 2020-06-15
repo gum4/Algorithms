@@ -1,0 +1,46 @@
+class Solution {
+public:
+    /**
+     * @param values: a vector of integers
+     * @return: a boolean which equals to true if the first player will win
+     */
+     //剩下三个和两个的时候，选择的人操作是唯一的
+     //返回第一个人比第二个人能多出的价值
+     int helper(vector<int>& V, int index){
+         if (index==V.size()-1){
+             return V[index];
+         }
+         if (index==V.size()-2){
+             return V[index]+V[index+1];
+         }
+         if (index==V.size()-3){
+             return V[index]+V[index+1]-V[index+2];
+         }
+         int choose1=V[index]-helper(V,index+1);
+         int choose2=V[index]+V[index+1]-helper(V,index+2);
+         return max(choose1,choose2);
+     }
+    bool firstWillWin(vector<int> &values) {
+        // write your code here
+        if (values.size()==1) return values[values.size()-1]>0;
+        if (values.size()==2) return values[values.size()-2]+values[values.size()-1]>0;
+        if (values.size()==3) return values[values.size()-3]+values[values.size()-2]-values[values.size()-1]>0;
+        vector<int> V(values.size(),0);
+        V[values.size()-1]=values[values.size()-1];
+        V[values.size()-2]=values[values.size()-2]+values[values.size()-1];
+        V[values.size()-3]=values[values.size()-3]+values[values.size()-2]-values[values.size()-1];
+        int i=values.size()-4;
+        while(i>=0){
+            V[i]=max(values[i]+values[i+1]-V[i+2],values[i]-V[i+1]);
+            i--;
+        }
+        for (unsigned int i=0;i<V.size();i++){
+            cout<<V[i]<<endl;
+        }
+        return V[0]>=0;
+        // if (helper(values,0)>0)
+        //     return true;
+        // return false;
+        
+    }
+};
