@@ -1,0 +1,91 @@
+class Solution {
+public:
+    /**
+     * @param Gene1: a string
+     * @param Gene2: a string
+     * @return: return the similarity of two gene fragments
+     */
+    int IIII=0;
+    int helper(string & G1, string & G2){
+        if (G1==""&&G2=="") return 0;
+        //cout<<G1<<" "<<G2<<endl;
+        int i1=0,i2=0;
+        while (G1[i1]>='0'&&G1[i1]<='9') i1++;
+        while (G2[i2]>='0'&&G2[i2]<='9') i2++;
+        int I1=stoi(G1.substr(0,i1));
+        int I2=stoi(G2.substr(0,i2));
+        IIII+=min(I1,I2);
+        char c1=G1[i1];
+        char c2=G2[i2];
+        // cout<<I1<<" "<<I2<<" "<<i1<<" "<<i2<<endl;
+        // cout<<G1<<" "<<G2<<endl;
+        if (I1>I2){
+            if (G1[i1]==G2[i2]) {
+                G1=G1.substr(i1+1);
+                string S=to_string(I1-I2)+c1;
+                G1=S+G1;
+                G2=G2.substr(i2+1);
+                return helper(G1,G2);
+            }
+            else{
+                int tmp=(I2);
+                G1=G1.substr(i1+1);
+                string S=to_string(I1-I2)+c1;
+                G1=S+G1;
+                G2=G2.substr(i2+1);
+                return tmp+helper(G1,G2);
+            }
+        }
+        else if (I1<I2){
+            if (G1[i1]==G2[i2]) {
+                G1=G1.substr(i1+1);
+                G2=G2.substr(i2+1);
+                 string S=to_string(I2-I1)+c2;
+                G2=S+G2;
+                return helper(G1,G2);
+            }
+            else{
+                int tmp=(I1);
+                G1=G1.substr(i1+1);
+                G2=G2.substr(i2+1);
+                string S=to_string(I2-I1)+c2;
+                G2=S+G2;
+                return tmp+helper(G1,G2);
+            }
+        }
+        else{
+            if (G1[i1]==G2[i2]) {
+                G1=G1.substr(i1+1);
+                G2=G2.substr(i2+1);
+                return helper(G1,G2);
+            }
+            else{
+                int tmp=(I1);
+                G1=G1.substr(i1+1);
+                G2=G2.substr(i2+1);
+                return tmp+helper(G1,G2);
+            }
+        }
+    }
+    string GeneSimilarity(string &Gene1, string &Gene2) {
+        // write your code here
+        // int c=(Gene2[0]-'0')-(Gene1[0]-'0');
+        // char cc='0'+c;
+        // cout<<cc<<endl;
+        int sum=helper(Gene1,Gene2);
+        cout<<sum<<" "<<IIII<<endl;
+        int up=IIII-sum;
+        // int common=1;
+        // while (up%common==0&&len%common==0){
+        //     common++;
+        // }
+        // up/=(common-1);
+        // len/=(common-1);
+        // cout<<up<<" "<<len<<endl;
+        string s="";
+        s+=to_string(up);
+        s+="/";
+        s+=to_string(IIII);
+        return s;
+    }
+};
