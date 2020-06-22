@@ -1,0 +1,39 @@
+class Solution {
+public:
+    /**
+     * @param board: A list of lists of character
+     * @param word: A string
+     * @return: A boolean
+     */
+     
+     bool within (int m, int n, int i, int j){
+        return i>=0&&i<m&&j>=0&&j<n;
+    }
+    
+    bool helper(vector<vector<char>>& B, int i, int j, string  w, int index){
+        if (index==w.length()) return true;
+        if (!within(B.size(),B[0].size(),i,j)) return false;
+        if (B[i][j]!=w[index]) return false;
+        char tmp=B[i][j];
+        B[i][j]='.';
+        if (helper(B,i-1,j,w,index+1)||helper(B,i+1,j,w,index+1)||helper(B,i,j-1,w,index+1)||helper(B,i,j+1,w,index+1)) return true;
+        B[i][j]=tmp;
+        return false;
+    }
+    bool exist(vector<vector<char>> &board, string &word) {
+        // write your code here
+        for (unsigned int i=0;i<board.size();i++){
+            for (unsigned int j=0;j<board[i].size();j++){
+                 cout<<board[i][j]<<" ";
+            }
+            cout<<endl;
+        }
+        for (unsigned int i=0;i<board.size();i++){
+            for (unsigned int j=0;j<board[i].size();j++){
+                if (helper(board,i,j,word,0)) return true;
+            }
+        }
+        
+        return false;
+    }
+};
