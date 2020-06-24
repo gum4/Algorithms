@@ -1,0 +1,74 @@
+class Solution {
+public:
+    /**
+     * @param s: an expression includes numbers, letters and brackets
+     * @return: a string
+     */
+    
+    vector<vector<int>> brackets(string s){
+        int c=0;
+        vector<vector<int>> res;
+        int i=0;
+        while (i<s.length()){
+            
+            vector<int> tmp;
+            int old=i;
+            if (s[i]>='0'&&s[i]<='9'){
+                while(s[i]>='0'&&s[i]<='9') i++;
+                tmp.push_back(stoi(s.substr(old,i-old)));
+                int j;
+                tmp.push_back(i);
+                c++;
+                for (j=i+1;j<s.length();j++){
+                    if (s[j]=='[') c++;
+                    if (s[j]==']') {
+                        c--;
+                        if (c==0){
+                            tmp.push_back(j);
+                            res.push_back(tmp);
+                            
+                            break;
+                        }
+                    }
+                }
+                i=j;
+            }
+            else i++;
+        }
+        return res;
+    }
+    
+    string helper(string s){
+        vector<vector<int>> b=brackets(s);
+        if (b.size()==0) return s;
+        string S;
+        if (b[0][0]==0) S="";
+        else S=s.substr(0,b[0][1]-1-(int)(log10(b[0][0])));
+        for (int i=0;i<b.size()-1;i++){
+            if (b[i][0]==0) continue;
+            string tmp=helper(s.substr(b[i][1]+1,b[i][2]-b[i][1]-1));
+            for (int r=1;r<=b[i][0];r++){
+                S+=tmp;
+            }
+            S+=s.substr(b[i][2]+1,b[i+1][1]-1-(b[i][2]+(int)(log10(b[i][0]))+1));
+        }
+        if (b[b.size()-1][0]!=0){
+            string tmp=helper(s.substr(b[b.size()-1][1]+1,b[b.size()-1][2]-b[b.size()-1][1]-1));
+            for (int r=1;r<=b[b.size()-1][0];r++){
+                S+=tmp;
+            }
+        }
+        if (b[b.size()-1][2]<s.length()-1) S+=s.substr(b[b.size()-1][2]+1);
+        return S;
+    }
+    string expressionExpand(string &s) {
+        // write your code here
+        vector<vector<int>> V=brackets(s);
+        for (unsigned int i=0;i<V.size();i++){
+            cout<<V[i][0]<<" , "<<V[i][1]<<" "<<V[i][2]<<endl;
+        }
+
+        //cout<<helper(S)<<endl;
+        return helper(s);
+    }
+};
