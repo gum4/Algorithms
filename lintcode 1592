@@ -1,0 +1,38 @@
+class Solution {
+public:
+    /**
+     * @param words: word list
+     * @param pattern: pattern string
+     * @return: list of matching words
+     */
+     
+     
+    bool match (string  w1, string w2){
+        if (w1.length()!=w2.length()) return false;
+        vector<vector<int>> V,V1;
+        unordered_map<char,vector<int>> M,M1;
+        for (unsigned int i=0;i<w1.length();i++){
+            M[w1[i]].push_back(i);
+            M1[w2[i]].push_back(i);
+        }
+        for (unordered_map<char,vector<int>>::iterator itr=M.begin();itr!=M.end();itr++){
+            V.push_back(itr->second);
+        }
+        for (unordered_map<char,vector<int>>::iterator itr=M1.begin();itr!=M1.end();itr++){
+            V1.push_back(itr->second);
+        }
+        set<vector<int>> seta(V.begin(), V.end()), setb(V1.begin(), V1.end());
+        return seta.size() == setb.size() && seta == setb;
+    }
+    vector<string> findAndReplacePattern(vector<string> &words, string &pattern) {
+        // Write your code here.
+        vector<string> v;
+        for (unsigned int i=0;i<words.size();i++){
+            if (match(words[i],pattern)){
+                v.push_back(words[i]);
+            }
+        }
+        
+        return v;
+    }
+};
