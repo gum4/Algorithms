@@ -1,0 +1,36 @@
+class Solution {
+public:
+    /**
+     * @param s: A string 
+     * @param p: A string includes "?" and "*"
+     * @return: is Match?
+     */
+    bool isMatch(string &s, string &p) {
+        // write your code here
+        int slen=s.length();
+        int plen=p.length();
+        if (slen==0&&plen==0) return true;
+        if (slen==0){
+            if (plen==1&&p[0]=='*') return true;
+            else return false;
+        }
+        if (slen>0&&plen==0) return false;
+        //res[i][j]表示s的前i个字符和p的前j个字符是否匹配
+        vector<vector<bool>>res (slen+1, vector<bool>(plen+1,false));
+        res[0][0]=true;
+        for(unsigned int j=1;j<=plen;j++){
+            if (res[0][j-1]&&p[j-1]=='*') res[0][j]=true;
+        }
+        for (unsigned int i=1;i<=slen;i++){
+            for (unsigned int j=1;j<=plen;j++){
+                //res[i][j-1]: '*'表示空格
+                //res[i-1][j]: '*'可替代任意数量
+                if (p[j-1]=='*') res[i][j]=res[i][j-1]||res[i-1][j];
+                //? 必须得用，s中第i个字符无论是什么都可以
+                else if (p[j-1]=='?') res[i][j]=res[i-1][j-1];
+                else res[i][j]=res[i-1][j-1]&&(s[i-1]==p[j-1]);
+            }
+        }
+        return res[slen][plen];
+    }
+};
