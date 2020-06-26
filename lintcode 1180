@@ -1,0 +1,75 @@
+class Solution {
+public:
+    /**
+     * @param boxes: List[int]
+     * @return: return an integer
+     */
+     
+    vector<vector<int>> brackets(vector<int> & B,int l, int r, set<int>& rec){
+        int i=l;
+        vector<vector<int>> V;
+        while (i<=r){
+            if (rec.find(B[i])!=rec.end()) {
+                i++;
+                continue;
+            }
+            int tmp=B[i];
+            int j;
+            for (j=r;j>=i;j--){
+                if (B[j]==tmp) break;
+            }
+            V.push_back(vector<int>{i,j});
+            i=j+1;
+        }
+        return V;
+    }
+    int helper(vector<int> & B,int  i,int  j, set<int>& rec){
+        int RES=0;
+        vector<vector<int>> V=brackets(B,i,j,rec);
+        for (unsigned int i=0;i<V.size();i++){
+            cout<<V[i][0]<<" "<<V[i][1]<<endl;
+        }
+        cout<<"######"<<endl;
+        for (unsigned int t=0;t<V.size();t++){
+            int res;
+            if (V[t][0]==V[t][1]){
+                if (rec.find(B[V[t][0]])==rec.end()) RES++;
+                continue;
+            }
+            int i1=V[t][0];
+            while (i1<=V[t][1]&&B[i1]==B[V[t][0]]){
+                i1++;
+            }
+            if (i1-1==V[t][1]) {
+                if (rec.find(B[V[t][0]])==rec.end())
+                    RES+=(V[t][1]-V[t][0]+1)*(V[t][1]-V[t][0]+1);
+                continue;
+            }
+            int j1=V[t][1];
+            while (j1>=V[t][0]&&B[j1]==B[V[t][1]]){
+                j1--;
+            }
+            int count=0;
+            for (unsigned int k=i1;k<=j1;k++){
+                if (B[k]==B[V[t][0]]) count++;
+            }//B[V[t][0]]==B[V[t][1]]
+            set<int> tmp=rec;
+            rec.insert(B[V[t][0]]);
+            res=(i1-V[t][0]+V[t][1]-j1+count)*(i1-V[t][0]+V[t][1]-j1+count)+helper(B,i1,j1,rec);
+            rec=tmp;
+            RES+=res;
+        }
+        return RES;
+    }
+    int removeBoxes(vector<int> &boxes) {
+        // write your code here
+        
+        // vector<vector<int>> V= brackets(boxes,2,6);
+        // for (unsigned int i=0;i<V.size();i++){
+        //     cout<<V[i][0]<<" "<<V[i][1]<<endl;
+        // }
+        //cout<<helper(boxes,2,4)<<endl;
+        set<int> S;
+        return helper(boxes,0,boxes.size()-1,S);
+    }
+};
