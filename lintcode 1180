@@ -53,6 +53,7 @@ public:
             for (unsigned int k=i1;k<=j1;k++){
                 if (B[k]==B[V[t][0]]) count++;
             }//B[V[t][0]]==B[V[t][1]]
+            //cout<<(i1-V[t][0]+V[t][1]-j1+count)<<endl;
             set<int> tmp=rec;
             rec.insert(B[V[t][0]]);
             res=(i1-V[t][0]+V[t][1]-j1+count)*(i1-V[t][0]+V[t][1]-j1+count)+helper(B,i1,j1,rec);
