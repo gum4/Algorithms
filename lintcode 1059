@@ -1,0 +1,41 @@
+class Solution {
+public:
+    /**
+     * @param nums: a list of integers
+     * @return: return a integer
+     */
+     int helper(unordered_map<int,int> & M){
+         
+     }
+    int deleteAndEarn(vector<int> &nums) {
+        // // write your code here
+        map<int,int> M;
+        map<int,int>::iterator itr;
+        for (unsigned int i=0;i<nums.size();i++){
+            M[nums[i]]++;
+        }
+        itr=M.end();
+        itr--;
+        
+        vector<int> res(M.size()+1,0);
+        res[M.size()-1]=(itr->first)*(itr->second);
+        res[M.size()]=0;
+        itr--;
+        
+        int index=M.size()-2;
+        while (index>=0){
+            map<int,int>::iterator itr1=itr;
+            itr1++;
+            if (itr1->first-itr->first>1){
+                res[index]=(itr->first)*(itr->second)+res[index+1];
+            }
+            else{
+                res[index]=max((itr->first)*(itr->second)+res[index+2],res[index+1]);
+            }
+            index--;
+            itr--;
+        }
+        
+        return res[0];
+    }
+};
