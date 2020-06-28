@@ -1,0 +1,68 @@
+class Solution {
+public:
+    /**
+     * @param times: a 2D array
+     * @param N: an integer
+     * @param K: an integer
+     * @return: how long will it take for all nodes to receive the signal
+     */
+     
+    void helper(vector<unordered_map<int,int>>& Graph, int K, int T, int N,vector<int>& path, vector<vector<int>> & PATH){
+        if (K==T) {
+            if (path.size()==N)
+                PATH.push_back(path);
+            return;
+        }
+        
+        unordered_map<int,int> M=Graph[K-1];
+        if (M.size()==0&&K!=T) return;
+        unordered_map<int,int>::iterator itr;
+        for (itr=M.begin();itr!=M.end();itr++){
+            path.push_back(itr->first);
+            helper(Graph,itr->first,T,path,PATH);
+            path.pop_back();
+        }
+    }
+    int networkDelayTime(vector<vector<int>> &times, int N, int K) {
+        // Write your code here
+        unordered_map<int,int> M;
+        vector<unordered_map<int,int>> Graph(N,M);
+        unordered_map<int,int>::iterator itr;
+        for (unsigned int i=0;i<times.size();i++){
+            
+            itr=Graph[times[i][0]-1].find(times[i][1]);
+            if (itr==Graph[times[i][0]-1].end()){
+                Graph[times[i][0]-1][times[i][1]]=times[i][2];
+            }
+            else{
+                if (itr->second>times[i][2])
+                    itr->second=times[i][2];
+            }
+        }
+        
+        // for (unsigned int i=0;i<Graph.size();i++){
+        //     cout<<i+1<<" : ";
+        //     if (Graph[i].size()==0) cout<<"NULL"<<endl;
+        //     else{
+                
+        //         for (itr=Graph[i].begin();itr!=Graph[i].end();itr++){
+        //             cout<<"( "<<itr->first<<" , "<<itr->second<<" ), ";
+        //         }
+        //         cout<<endl;
+        //     }
+        // }
+        // cout<<helper(Graph,K,S)<<endl;
+        vector<vector<int>> PATH;
+        for (unsigned int i=1;i<=N&&i!=K;i++){
+            vector<int> path(1,K);
+            helper(Graph,K,4,N,path,PATH);
+        }
+        // for (unsigned int i=0;i<PATH.size();i++){
+        //     for (unsigned int j=0;j<PATH[i].size();j++){
+        //         cout<<PATH[i][j]<<" ";
+        //     }
+        //     cout<<endl;
+        // }
+        return 0;
+    }
+};
