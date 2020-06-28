@@ -1,0 +1,38 @@
+class Solution {
+public:
+    /**
+     * @param num: a non negative integer number
+     * @return: an array represent the number of 1's in their binary
+     */
+     
+    int helper(vector<int>& num){
+        int count=0;
+        for (unsigned int i=0;i<num.size();i++){
+            if (num[i]==1) count++;
+        }
+        num[num.size()-1]++;
+        
+        for (int i=num.size()-1;i>0;i--){
+            if (num[i]==2){
+                num[i]=0;
+                num[i-1]++;
+            }
+            else{
+                break;
+            }
+        }
+        return count;
+    }
+    vector<int> countBits(int num) {
+        // write your code here
+        vector<int> tmp;
+        tmp.push_back(0);
+        vector<int> TMP((int)(log2(num+1))+1,0);
+        TMP[TMP.size()-1]=1;
+        if (num==0) return tmp;
+        for (unsigned int i=1;i<=num;i++){
+            tmp.push_back(helper(TMP));
+        }
+        return tmp;
+    }
+};
