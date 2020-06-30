@@ -1,0 +1,68 @@
+class Solution {
+public:
+    /**
+     * @param words: an array of string
+     * @param maxWidth: a integer
+     * @return: format the text such that each line has exactly maxWidth characters and is fully
+     */
+    vector<string> helper(int N, int n){
+        
+        int base=N/n;
+        vector<char> tmp(base, ' ');
+        string s(tmp.begin(),tmp.end());
+        vector<string> res(n,s);
+        for (int i=0;i<N-base*n;i++){
+            res[i]+=" ";
+        }
+        return res;
+    }
+    vector<string> fullJustify(vector<string> &words, int maxWidth) {
+        // write your code here
+        int index=0;
+        vector<string> VS;
+        while (index<words.size()){
+            int real_count=0;
+            int count=0;
+            int rec=index;
+            string S="";
+            
+            while (index<words.size()&&(maxWidth-count)>=(int)(words[index].length())){
+                real_count+=words[index].length();
+                count+=(words[index].length()+1);
+                index++;
+                
+            }
+            
+            if (index-rec-1>0){
+                if (index==words.size()){
+                    for (unsigned int i=rec;i<index-1;i++){
+                        S+=words[i];
+                        S+=" ";
+                    }
+                    S+=words[index-1];
+                    vector<char> tmp(maxWidth-real_count-(index-rec-1), ' ');
+                    string s(tmp.begin(),tmp.end());
+                    S+=s;
+                }
+                else{
+                vector<string> V=helper(maxWidth-real_count,index-rec-1);
+                    for (unsigned int i=rec;i<index-1;i++){
+                        S+=words[i];
+                        S+=V[i-rec];
+                    }
+                    S+=words[index-1];
+                }
+                
+                
+            }
+            else{
+                S+=words[rec];
+                vector<char> tmp(maxWidth-real_count, ' ');
+                string s(tmp.begin(),tmp.end());
+                S+=s;
+            }
+            VS.push_back(S);
+        }
+        return VS;
+    }
+};
