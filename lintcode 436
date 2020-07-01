@@ -1,0 +1,41 @@
+class Solution {
+public:
+    /**
+     * @param matrix: a matrix of 0 and 1
+     * @return: an integer
+     */
+    int maxSquare(vector<vector<int>> &matrix) {
+        // write your code here
+        
+        int m=matrix.size();
+        int n=matrix[0].size();
+        int MAX=0;
+        vector<int> v(n,0);
+        vector<vector<int>> V(m,v);
+        V[m-1][n-1]=matrix[m-1][n-1]==1? 1:0;
+        MAX=max(MAX,V[m-1][n-1]);
+        for (int i=0;i<m;i++){
+            V[i][n-1]=matrix[i][n-1]==1? 1:0;
+            MAX=max(MAX,V[i][n-1]);
+        }
+        for (int j=0;j<n;j++){
+            V[m-1][j]=matrix[m-1][j]==1? 1:0;
+            MAX=max(MAX,V[m-1][j]);
+        }
+        for (int i=m-2;i>=0;i--){
+            for (int j=n-2;j>=0;j--){
+                if (matrix[i][j]==0) V[i][j]=0;
+                else{
+                    if (matrix[i+1][j]==1&&matrix[i][j+1]==1){
+                        V[i][j]=min(V[i+1][j],min(V[i][j+1],V[i+1][j+1]))+1;
+                    }
+                    else{
+                        V[i][j]=1;
+                    }
+                }
+                MAX=max(MAX,V[i][j]);
+            }
+        }
+        return MAX*MAX;
+    }
+};
