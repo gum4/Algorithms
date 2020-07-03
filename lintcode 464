@@ -1,0 +1,47 @@
+class Solution {
+public:
+    /**
+     * @param A: an integer array
+     * @return: nothing
+     */
+     void merge(vector<int> & A, int i, int mid, int j, vector<int>& tmp){
+         int i1=i,i2=mid+1,t=0;
+         while (i1<=mid&&i2<=j){
+             if (A[i1]>A[i2]){
+                 tmp[t]=A[i2];
+                 i2++;
+             }
+             else {
+                 tmp[t]=A[i1];
+                 i1++;
+             }
+             t++;
+         }
+         while (i1<=mid){
+             tmp[t]=A[i1];
+             t++;
+             i1++;
+         }
+         while (i2<=j){
+             tmp[t]=A[i2];
+             t++;
+             i2++;
+         }
+         for (int k=i;k<=j;k++){
+             A[k]=tmp[k-i];
+         }
+     }
+     void helper(vector<int> & A, int i, int j, vector<int>& tmp){
+            if (i<j){
+            int mid=(i+j)/2;
+             helper(A,i,mid,tmp);
+             helper(A,mid+1,j,tmp);
+             merge(A,i,mid,j,tmp);
+            }
+     }
+    void sortIntegers2(vector<int> &A) {
+        // write your code here
+        vector<int> tmp(A.size(),0);
+        helper(A,0,A.size()-1,tmp);
+    }
+};
