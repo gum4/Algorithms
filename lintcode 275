@@ -1,0 +1,22 @@
+class Solution {
+public:
+    /**
+     * @param stops: An array represents where each car stops.
+     * @param k: The number of cars should be covered.
+     * @return: return the minimum length of the shed that meets the requirements.
+     */
+    int calculate(vector<int> &stops, int k) {
+        // write your code here
+        sort(stops.begin(),stops.end());
+        if (stops.size()==k+1){
+            return stops[k]-stops[0];
+        }
+        int index=0;
+        int res=stops[k-1]-stops[0]+1;
+        while (index+k+1<stops.size()){
+            res=max(res,max(stops[index+k]-stops[index],stops[index+k+1]-stops[index+1]));
+            index++;
+        }
+        return res;
+    }
+};
