@@ -1,0 +1,41 @@
+class Solution {
+public:
+    /**
+     * @param digits: A digital string
+     * @return: all posible letter combinations
+     */
+    vector<string> helper(int I){
+        vector<string> v;
+        switch (I){
+            case 2: v={"a","b","c"}; break;
+            case 3: v={"d","e","f"}; break;
+            case 4: v={"g","h","i"}; break;
+            case 5: v={"j","k","l"}; break;
+            case 6: v={"m","n","o"}; break;
+            case 7: v={"p","q","r","s"}; break;
+            case 8: v={"t","u","v"}; break;
+            case 9: v={"w","x","y","z"}; break;
+            default: break;
+        }
+        return v;
+    }
+    
+    vector<string> letterCombinations(string &digits) {
+        // write your code here
+        vector<string> res=helper(digits[0]-'0');
+        int index=1;
+        while (index<digits.length()){
+            vector<string> tmp=helper(digits[index]-'0');
+            vector<string> new_res;
+            for (unsigned int i=0;i<res.size();i++){
+                for (unsigned int j=0;j<tmp.size();j++){
+                    string S=res[i]+tmp[j];
+                    new_res.push_back(S);
+                }
+            }
+            index++;
+            res=new_res;
+        }
+        return res;
+    }
+};
