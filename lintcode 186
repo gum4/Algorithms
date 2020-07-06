@@ -1,0 +1,89 @@
+/**
+ * Definition for a point.
+ * struct Point {
+ *     int x;
+ *     int y;
+ *     Point() : x(0), y(0) {}
+ *     Point(int a, int b) : x(a), y(b) {}
+ * };
+ */
+
+class Solution {
+public:
+    /**
+     * @param points: an array of point
+     * @return: An integer
+     */
+    int maxPoints(vector<Point> &points) {
+        // write your code here
+        if (points.size()==0) return 0;
+        if (points.size()==1) return 1;
+        if (points.size()==2) return 2;
+        int index=0;
+        cout<<points.size()<<endl;
+        float fm=numeric_limits<float>::max();
+        // map<float,int> M;
+        // vector<map<float,int>> V(points.size(),M);
+        int MAX=2;
+        while (index<points.size()){
+            map<float,int> M;
+            int cm=0;
+            map<float,int>::iterator itr;
+            for (unsigned int i=index+1;i<points.size();i++){
+                if (points[i].x==points[index].x&&points[i].y==points[index].y){
+                    cm++;
+                    continue;
+                }
+                float tmp=points[i].x==points[index].x?fm:((points[i].y-points[index].y)*1.0/(points[i].x-points[index].x));
+                M[tmp]++;
+            }
+            MAX=max(MAX,cm+1);
+            for (itr=M.begin();itr!=M.end();itr++){
+                //cout<<itr->first<<" "<<itr->second<<endl;
+                MAX=max(MAX,itr->second+1+cm);
+            }
+            cout<<endl;
+            index++;
+        }
+        return MAX;
+        // int MAX=2;
+        // //res记录每个点最长路径长度
+        // vector<int> res(points.size(),0);
+        // //xielv记录每个点最长路径斜率
+        // vector<float> xielv(points.size()-1,0.0);
+        // float fm=numeric_limits<float>::max();
+
+        // res[0]=1;
+        // res[1]=2;
+        // xielv[0]=points[1].x==points[0].x?fm:((points[1].y-points[0].y)*1.0/(points[1].x-points[0].x));
+        // int index=2;
+        // while (index<points.size()){
+        //     int cm=res[0];
+        //     float xl=points[index].x==points[0].x?fm:((points[index].y-points[0].y)*1.0/(points[index].x-points[0].x));;
+        //     for (unsigned int i=1;i<index;i++){
+        //         float tmp=points[index].x==points[i].x?fm:((points[index].y-points[i].y)*1.0/(points[index].x-points[i].x));
+        //         if (tmp==xielv[i-1]){
+        //             if (res[i]>=cm){
+        //                 cm=res[i];
+        //                 xl=xielv[i-1];
+        //             }
+        //         }
+        //     }
+        //     xielv[index-1]=xl;
+        //     res[index]=cm+1;
+        //     MAX=max(MAX,res[index]);
+        //     index++;
+        // }
+        // for (unsigned int i=0;i<xielv.size();i++){
+        //     cout<<xielv[i]<<" ";
+            
+        // }
+        // cout<<endl;
+        //  for (unsigned int i=0;i<res.size();i++){
+        //     cout<<res[i]<<" ";
+            
+        // }
+        // cout<<endl;
+        // return MAX;
+    }
+};
