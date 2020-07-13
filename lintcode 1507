@@ -1,0 +1,35 @@
+class Solution {
+public:
+    /**
+     * @param A: the array
+     * @param K: sum
+     * @return: the length
+     */
+    int shortestSubarray(vector<int> &A, int K) {
+        // Write your code here.
+        if (A.size()==1){
+            if (A[0]>=K) return 1;
+            return -1;
+        }
+        int LEN=INT_MAX;
+        int index=0;
+        while (index<A.size()){
+            int pre_sum=0;
+            int i=index;
+            for (i=index;i>=0;--i){
+                pre_sum+=A[i];
+                if (pre_sum>=K) break;
+            }
+            if (i==-1){
+                index++;
+                continue;
+            }
+            else{
+                LEN=min(LEN,index-i+1);
+                index++;
+            }
+        }
+        if (LEN==INT_MAX) return -1;
+        return LEN;
+    }
+};
