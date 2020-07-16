@@ -1,0 +1,55 @@
+/**
+ * Definition of singly-linked-list:
+ * class ListNode {
+ * public:
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int val) {
+ *        this->val = val;
+ *        this->next = NULL;
+ *     }
+ * }
+ */
+
+class Solution {
+public:
+    /**
+     * @param head: a ListNode
+     * @param k: An integer
+     * @return: a ListNode
+     */
+    ListNode * helper(ListNode *& head, int k){
+        int count=0;
+        ListNode* rec=head;
+        ListNode* cur=head;
+        ListNode* pre=NULL;
+        while (cur&&count<k){
+            ListNode* tmp=cur->next;
+            cur->next=pre;
+            pre=cur;
+            cur=tmp;
+            count++;
+        }
+        head=pre;
+        rec->next=cur;
+        return rec;
+    }
+    ListNode * reverseKGroup(ListNode * head, int k) {
+        // write your code here
+        if (!head) return NULL;
+        ListNode* l=head;
+        int len=0;
+        while (l){
+            l=l->next;
+            len++;
+        }
+        int operations=len/k,index=1;
+        ListNode* tmp=helper(head,k);
+        ListNode* res=head;
+        while (tmp->next&&index<operations){
+            tmp=helper(tmp->next,k);
+            index++;
+        }
+        return res;
+    }
+};
