@@ -1,0 +1,56 @@
+class Solution {
+public:
+    /*
+     * @param : an array of arrays
+     * @return: the sum of all unique weighted paths
+     */
+     
+    void helper(vector<vector<int>>& grid, int i, int j, int& path, set<int>& PATH){
+        if (i==grid.size()-1&&j==grid[0].size()-1){
+            PATH.insert(path);
+            return;
+        }
+        if (i+1<grid.size()){
+            path+=grid[i+1][j];
+            helper(grid,i+1,j,path,PATH);
+            path-=grid[i+1][j];
+        }
+        if (j+1<grid[0].size()){
+            path+=grid[i][j+1];
+            helper(grid,i,j+1,path,PATH);
+            path-=grid[i][j+1];
+        }
+    }
+    int uniqueWeightedPaths(vector<vector<int>>& grid) {
+        // write your codes here
+        if (grid.size()==0||(grid.size()==1&&grid[0].size()==0)) return 0;
+        set<int> S;
+        int m=grid.size(),n=grid[0].size();
+        vector<vector<set<int>>> res(m,vector<set<int>> (n,S));
+        res[0][0].insert(grid[0][0]);
+        for (int j=1;j<n;j++){
+            set<int>::iterator itr=res[0][j-1].begin();
+            res[0][j].insert(*itr+grid[0][j]);
+        }
+        for (int i=1;i<m;i++){
+            set<int>::iterator itr=res[i-1][0].begin();
+            res[i][0].insert(*itr+grid[i][0]);
+        }
+        for (int i=1;i<m;i++){
+            for (int j=1;j<n;j++){
+                set<int>::iterator itr;
+                for (itr=res[i-1][j].begin();itr!=res[i-1][j].end();itr++){
+                    res[i][j].insert(*itr+grid[i][j]);
+                }
+                for (itr=res[i][j-1].begin();itr!=res[i][j-1].end();itr++){
+                    res[i][j].insert(*itr+grid[i][j]);
+                }
+            }
+        }
+        int sum=0;
+        for (set<int>::iterator itr=res[m-1][n-1].begin();itr!=res[m-1][n-1].end();itr++){
+            sum+=*itr;
+        }
+        return sum;
+    }
+};
