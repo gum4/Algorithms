@@ -1,0 +1,23 @@
+class Solution {
+public:
+    /**
+     * @param s1: A string
+     * @param s2: A string
+     * @param s3: A string
+     * @return: Determine whether s3 is formed by interleaving of s1 and s2
+     */
+     
+    bool helper(string s1, string s2, string s3){
+        //cout<<s1<<" "<<s2<<" "<<s3<<endl;
+        if (s1==""&&s2==""&&s3=="") return true;
+        if (s3[0]==s1[0]&&s3[0]!=s2[0]) return helper(s1.substr(1),s2,s3.substr(1));
+        if (s3[0]==s2[0]&&s3[0]!=s1[0]) return helper(s1,s2.substr(1),s3.substr(1));
+        if (s3[0]==s1[0]&&s3[0]==s2[0]) 
+            return helper(s1.substr(1),s2,s3.substr(1))||helper(s1,s2.substr(1),s3.substr(1));
+        return false;
+    }
+    bool isInterleave(string &s1, string &s2, string &s3) {
+        // write your code here
+        return helper(s1,s2,s3);
+    }
+};
