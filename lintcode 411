@@ -1,0 +1,48 @@
+class Solution {
+public:
+    /**
+     * @param n: a number
+     * @return: Gray code
+     */
+     int make(string S, int n){
+         int res=0;
+         for (int i=0;i<S.length();i++){
+             res+=(S[i]-'0')*pow(2,n-1-i);
+         }
+         return res;
+     }
+    void helper(int n, set<string> & Set, string &S,vector<string>& V){
+        //cout<<S<<endl;
+        if (Set.size()==pow(2,n)) return;
+        string tmp=S;
+        for (int i=S.length()-1;i>=0;--i){
+            S[i]='0'+('1'-S[i]);
+            if (Set.find(S)!=Set.end()){
+                S=tmp;
+                continue;
+            }
+            Set.insert(S);
+            V.push_back(S);
+            helper(n,Set,S,V);
+        }
+    }
+    vector<int> grayCode(int n) {
+        // write your code here
+        vector<char> C(n,'0');
+        string S(C.begin(),C.end());
+        set<string> Set;
+        Set.insert(S);
+        vector<string> V{S};
+        helper(n,Set,S,V);
+        vector<int> res;
+        // for (set<string>::iterator itr=Set.begin();itr!=Set.end();itr++){
+        //     cout<<*itr<<endl;
+        //     res.push_back(make(*itr,n));
+        // }
+        for (int i=0;i<V.size();i++){
+            cout<<V[i]<<endl;
+            res.push_back(make(V[i],n));
+        }
+        return res;
+    }
+};
