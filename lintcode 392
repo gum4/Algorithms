@@ -1,0 +1,31 @@
+class Solution {
+public:
+    /**
+     * @param A: An array of non-negative integers
+     * @return: The maximum amount of money you can rob tonight
+     */
+    long long houseRobber(vector<int> &A) {
+        // write your code here
+        long long MAX=0;
+        vector<long long> res(A.size(),0);
+        vector<long long> stor(A.size(),0);
+        res[0]=(long long)A[0];
+        res[1]=(long long)A[1];
+        stor[0]=(long long)A[0];
+        stor[1]=(long long)(max(A[0],A[1]));
+        MAX=max(MAX,max(res[0],res[1]));
+        int index=2;
+        
+        while (index<A.size()){
+            res[index]=(long long)A[index]+stor[index-2];
+            stor[index]=max(res[index],res[index-1]);
+            MAX=max(MAX,res[index]);
+            index++;
+        }
+        for (int i=0;i<A.size();i++){
+            cout<<res[i]<<" ";
+        }
+        cout<<endl;
+        return MAX;
+    }
+};
