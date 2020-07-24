@@ -1,0 +1,41 @@
+class Solution {
+public:
+    /**
+     * @param A: An integer array
+     * @return: An integer
+     */
+    int stoneGame(vector<int> &A) {
+        // write your code here
+        if (A.size()==0) return 0;
+        int N=A.size();
+        vector<vector<int>> res(N,vector<int> (N,0));
+        vector<vector<int>> stor(N,vector<int> (N,0));
+        for (int i=0;i<N;i++){
+            stor[i][i]=A[i];
+        }
+        for (int len=2;len<=N;len++){
+            for (int i=0;i+len-1<N;i++){
+                if (len==2) {
+                    res[i][i+len-1]=A[i]+A[i+len-1];
+                    stor[i][i+len-1]=stor[i][i]+A[i+len-1];
+                }
+                else{
+                    stor[i][i+len-1]=stor[i][i+len-2]+A[i+len-1];
+                    res[i][i+len-1]=stor[i][i+len-1];
+                    int tmp=min(res[i+1][i+len-1],res[i][i+len-2]);
+                    for (int j=i+1;j<i+len-2;j++){
+                        tmp=min(tmp,res[i][j]+res[j+1][i+len-1]);
+                    }
+                    res[i][i+len-1]+=tmp;
+                }
+            }
+        }
+        // for (int i=0;i<N;i++){
+        //     for (int j=0;j<N;j++){
+        //         cout<<res[i][j]<<" ";
+        //     }
+        //     cout<<endl;
+        // }
+        return res[0][N-1];
+    }
+};
