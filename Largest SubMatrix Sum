@@ -1,0 +1,31 @@
+//Given a matrix that contains integers, find the submatrix with the largest sum.
+
+//Return the sum of the submatrix.
+
+public class Solution {
+  public int largest(int[][] matrix) {
+    int row = matrix.length;
+    int col = matrix[0].length;
+    int globalMax = Integer.MIN_VALUE;
+    int rowSumMax = Integer.MIN_VALUE;
+    for(int i = 0; i < row; i++){
+      int[] helper = new int[col];
+      for(int j = i; j < row; j++){
+        for(int k = 0; k < col; k++){
+          helper[k] += matrix[j][k];
+        }
+        // find the maxsum subarray in the sum array
+        int maxSum = 0;
+        if(col == 0){
+          rowSumMax = helper[0];
+        }else{
+          for(int x = 0; x < col; x++){
+              maxSum = Math.max(maxSum + helper[x], helper[x]);
+              rowSumMax = Math.max(rowSumMax, maxSum);
+            }
+          } 
+        }globalMax = Math.max(globalMax, rowSumMax);
+      }
+      return globalMax;
+    }
+  }
