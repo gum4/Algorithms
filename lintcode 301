@@ -1,0 +1,86 @@
+class Solution {
+public:
+    /**
+     * @param l: left
+     * @param r: right
+     * @return: return the number of lucky number in [l,r]
+     */
+    void helper(int index, string S,  vector<string>& V){
+        // for (int i=0;i<V.size();i++){
+        //     cout<<V[i]<<" ";
+        // }
+        // cout<<endl;
+        if (index==S.length()) return;
+        
+        vector<string> VS;
+        for (int i=0;i<V.size();i++){
+            string str=V[i];
+            if (S[index]=='0'){
+                VS.push_back(str+str[str.length()-1]);
+                continue;
+            }
+            if ((str[str.length()-1]-'0')+(S[index]-'0')<=9){
+                char c=(str[str.length()-1]+(S[index]-'0'));
+                
+                VS.push_back(str+c);
+            }
+            if ((str[str.length()-1]-'0')-(S[index]-'0')>=0){
+                char c=(str[str.length()-1]-(S[index]-'0'));
+                VS.push_back(str+c);
+            }
+            if ((str[str.length()-1]-'0')+(S[index]-'0')>9&&(str[str.length()-1]-'0')-(S[index]-'0')<0){
+                continue;
+            }
+        }
+        V=VS;
+        helper(index+1,S,V);
+    }
+    void HELPER(int index, int count, vector<string> &V,vector<string> & tmp){
+        if (index==count) return;
+        for (int i=0;i<tmp.size();i++){
+            cout<<tmp[i]<<" ";
+        }
+        cout<<endl;
+        vector<string> VV;
+        for (int i=0;i<tmp.size();i++){
+            if (tmp[i][0]!='0') V.push_back(tmp[i]);
+            vector<string> vv{"0","1","2","3","4","5","6","7","8","9"};
+            helper(0,tmp[i],vv);
+            for (int j=0;j<vv.size();j++){
+                VV.push_back(vv[j]);
+            }
+        }
+        tmp=VV;
+        HELPER(index+1,count,V,tmp);
+    }
+    int theNumberofLuckyNumber(int l, int r) {
+        // write your code here
+        //count表示r是几位数，需要递归count-1层
+        int count=(int)log10(r)+1;
+        vector<string> tmp={"7"};
+        vector<string> V={"7"};
+        HELPER(0,count,V,tmp);
+        int num=0;
+        vector<long> res;
+        for (int i=0;i<V.size();i++){
+            res.push_back(stol(V[i]));
+
+        }
+        sort(res.begin(),res.end());
+        res.erase(unique(res.begin(), res.end()), res.end());
+        for (int i=0;i<res.size();i++){
+            if (res[i]>=l&&res[i]<=r) {
+                //cout<<res[i]<<endl;
+                num++;
+            }
+        }
+        return num;
+  
+        // vector<string> vv{"1","2","3","4","5","6","7","8","9"};
+        // helper(0,"70",vv);
+        // for (int i=0;i<vv.size();i++){
+        //     cout<<vv[i]<<endl;
+
+        // }
+    }
+};
