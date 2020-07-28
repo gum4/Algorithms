@@ -1,0 +1,50 @@
+class Solution {
+public:
+    /**
+     * @param A: a list of integer
+     * @param K: a integer
+     * @param L: a integer
+     * @return: return the maximum number of apples that they can collect.
+     */
+    int PickApples(vector<int> &A, int K, int L) {
+        // write your code here
+        if (K+L>A.size()) return -1;
+        int N=A.size();
+        vector<int> sum(N,0);
+        sum[0]=A[0];
+        for (int i=1;i<N;i++){
+            sum[i]=sum[i-1]+A[i];
+        }
+        vector<int> res(N-K-L+1,0);
+        vector<int> res1(N-K-L+1,0);
+        int globalMax=0;
+        int index=1;
+        res[0]=sum[K-1];
+        res1[0]=sum[L-1];
+        for (int i=K+L-1;i<N;i++){
+            globalMax=max(globalMax,res[0]+(sum[i]-sum[i-L]));
+        }
+        for (int i=K+L-1;i<N;i++){
+            globalMax=max(globalMax,res1[0]+(sum[i]-sum[i-K]));
+        }
+        
+        //globalMax[0]=sum[K-1];
+        while (index<N-K-L+1){
+            res[index]=max(res[index-1],sum[index+K-1]-sum[index-1]);
+            for (int i=K+L+index-1;i<N;i++){
+                globalMax=max(globalMax,res[index]+(sum[i]-sum[i-L]));
+            }
+            index++;
+        }
+        index=1;
+        while (index<N-K-L+1){
+            res1[index]=max(res1[index-1],sum[index+L-1]-sum[index-1]);
+            for (int i=K+L+index-1;i<N;i++){
+                globalMax=max(globalMax,res1[index]+(sum[i]-sum[i-K]));
+            }
+            index++;
+        }
+        
+        return globalMax;
+    }
+};
