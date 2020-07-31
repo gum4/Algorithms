@@ -1,0 +1,35 @@
+class Solution {
+public:
+    /**
+     * @param n: an integer
+     * @return: return an integer
+     */
+    int checkRecord(int n) {
+        // write your code here
+        vector<long long> A0_L0(n),A0_L1(n),A0_L2(n),A1_L0(n),A1_L1(n),A1_L2(n);
+        vector<long long> res(n);
+        int M = 1e9 + 7;
+        A0_L0[0]=1;
+        A1_L0[0]=1;
+        A0_L1[0]=1;
+        A0_L2[0]=0;
+        A1_L1[0]=0;
+        A1_L2[0]=0;
+        int index=1;
+        res[0]=3;
+        while (index<n){
+            res[index]=(3*(A0_L0[index-1]+A0_L1[index-1])+2*(A0_L2[index-1]+A1_L0[index-1]+A1_L1[index-1])+A1_L2[index-1])%M;
+            A0_L0[index]=A0_L0[index-1]%M+A0_L1[index-1]%M+A0_L2[index-1]%M;
+            A0_L1[index]=A0_L0[index-1]%M;
+            A0_L2[index]=A0_L1[index-1]%M;
+            A1_L0[index]=A1_L0[index-1]%M+A1_L1[index-1]%M+A1_L2[index-1]%M+A0_L2[index-1]%M+A0_L1[index-1]%M+A0_L0[index-1]%M;
+            A1_L1[index]=A1_L0[index-1]%M;
+            A1_L2[index]=A1_L1[index-1]%M;
+            index++;
+        }
+        // for (int i=0;i<n;i++){
+        //     cout<<A0_L0[i]<<" "<<A0_L1[i]<<" "<<A0_L2[i]<<" "<<A1_L0[i]<<" "<<A1_L1[i]<<" "<<A1_L2[i]<<endl;
+        // }
+        return res[n-1] ;
+    }
+};
