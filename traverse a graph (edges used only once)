@@ -1,0 +1,18 @@
+void helper(vector<vector<int>> &graph, int index, vector<int> & path, unordered_set<int>& S,vector<vector<int>> &PATH){
+        if (S.size()==graph.size()){
+            PATH.push_back(path);
+            MIN=min(MIN,(int)path.size());
+            return;
+        }
+        bool res=false;
+        unordered_set<int> tmp=S;
+        for (int i=0;i<graph[index].size();i++){
+            if (S.find(graph[index][i])!=S.end()) continue;
+            S.insert(graph[index][i]);
+            path.push_back(graph[index][i]);
+            /*res=res||*/helper(graph,graph[index][i],path,S,PATH);
+            S=tmp;
+            path.pop_back();
+        }
+        //return res;
+    } 
