@@ -1,0 +1,45 @@
+/**
+ * Definition of TreeNode:
+ * class TreeNode {
+ * public:
+ *     int val;
+ *     TreeNode *left, *right;
+ *     TreeNode(int val) {
+ *         this->val = val;
+ *         this->left = this->right = NULL;
+ *     }
+ * }
+ */
+
+class Solution {
+public:
+    /**
+     * @param root: the root
+     * @return: return the min steps
+     */
+     
+     //把某个节点的值调整为target，使得调整结束此节点以下满足average的最小调整步数
+     //最小edit的情况不需要左右孩子同时变
+     int helper(TreeNode* root, int target){
+         int I=root->val==target?0:1;
+         if (!root->left&&!root->right){
+             return I;
+         }
+         if (!root->left){
+             return I+helper(root->right,target);
+         }
+         if (!root->right){
+             return I+helper(root->left,target);
+         }
+         int tmp=INT_MAX;
+        //  for (int i=MIN;i<=MAX;i++){
+        //      tmp=min(tmp,helper(root->left,i)+helper(root->right,2*target-i));
+        //  }
+        tmp=min(helper(root->left,root->left->val)+helper(root->right,2*target-root->left->val),helper(root->left,2*target-root->right->val)+helper(root->right,root->right->val));
+         return I+tmp;
+     }
+    int makeBinaryTreeAverage(TreeNode * root) {
+        // write your code here
+        return helper(root,root->val);
+    }
+};
