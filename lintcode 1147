@@ -1,0 +1,18 @@
+class Solution {
+public:
+    /**
+     * @param low: the simple task
+     * @param high: the complex task
+     * @return: the most value
+     */
+    int workPlan(vector<int> &low, vector<int> &high) {
+        // Write your code here.
+        vector<int> res(low.size(),0);
+        res[0]=low[0];
+        for (int index=1;index<low.size();index++){
+            int tmp=index-2>=0?res[index-2]:0;
+            res[index]=max(low[index]+res[index-1],high[index]+res[index-2]);
+        }
+        return res[res.size()-1];
+    }
+};
