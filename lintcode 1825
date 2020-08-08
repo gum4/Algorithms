@@ -1,0 +1,18 @@
+class Solution {
+public:
+    /**
+     * @param k: integer k
+     * @return: minimum number of operations that change 0 to k
+     */
+     
+    int helper(int  k){
+        if (k==0) return 0;
+        if (k==1) return 1;
+        if (k%2==0) return 1+helper(k/2);
+        return 1+helper(k-1);
+    }
+    int numberChange(int k) {
+        // write your code here
+        return helper(k);
+    }
+};
