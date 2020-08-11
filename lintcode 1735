@@ -1,0 +1,43 @@
+class Solution {
+public:
+    /**
+     * @param L: a string
+     * @param R: a string
+     * @return: the number of superpalindromes
+     */
+     
+     
+    bool isPalindrome(string str) {
+        int left = 0, right = (int)str.size() - 1;
+        while (left < right) {
+            if (str[left++] != str[right--]) return false;
+        }
+        return true;
+    }
+    
+    
+    void helper(string S, long L, long R, int& res){
+        if (S.length()>9) return;
+        if (!S.empty()&&S[0]!='0'){
+            long num=stol(S);
+            num*=num;
+            if (num>R) return;
+            if (num>=L&&isPalindrome(to_string(num))) {
+                ++res;
+            }
+        }
+        for (char c='0';c<='9';++c){
+            helper(string(1,c)+S+string(1,c),L,R,res);
+        }
+    }
+    int superpalindromesInRange(string &L, string &R) {
+        // Write your code here
+        long l=stol(L),r=stol(R);
+        int res=0;
+        helper("",l,r,res);
+        for (char c='0';c<='9';++c){
+            helper(string(1,c),l,r,res);
+        }
+        return res;
+    }
+};
