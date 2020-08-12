@@ -1,0 +1,59 @@
+class Solution {
+public:
+    /**
+     * @param str: a string for calculating.
+     * @param k: the length of special substring.
+     * @return: return the number of special substrings.
+     */
+    int specialSubstringCount(string &str, int k) {
+        // write your code here.    
+        if (str.empty()) return 0;
+        int n=str.length();
+        unordered_map<char,int> M;
+        for (int i=0;i<k;++i){
+            M[str[i]]++;
+        }
+        vector<unordered_set<char>> V(n-k+1);
+        unordered_map<char,int>::iterator itr;
+        unordered_set<char>::iterator itr1;
+        for (itr=M.begin();itr!=M.end();itr++){
+            if (itr->second>1) V[0].insert(itr->first);
+        }
+        int res=V[0].size()==1?1:0;
+        // for (itr1=V[0].begin();itr1!=V[0].end();itr1++){
+        //     cout<<*itr1<<endl;
+        // }
+        int index=1;
+        while (index<n-k+1){
+            unordered_set<char> tmp=V[index-1];
+            itr=M.find(str[index-1]);
+            int pre=itr->second;
+            
+            if (pre==1){
+                M.erase(str[index-1]);
+            }
+            else if (pre==2){
+                itr->second--;
+               tmp.erase(str[index-1]);
+            }
+            else{
+                itr->second--;
+            }
+            itr=M.find(str[index+k-1]);
+            if (itr==M.end()) M[str[index+k-1]]=1;
+            else {
+                itr->second++;
+                tmp.insert(str[index+k-1]);
+            }
+            V[index]=tmp;
+
+            // for (itr1=tmp.begin();itr1!=tmp.end();itr1++){
+            //     cout<<*itr1<<" ";
+            // }
+            // cout<<endl;
+            if (V[index].size()==1) res++;
+            index++;
+        }
+        return res;
+    }
+};
