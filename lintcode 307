@@ -1,0 +1,38 @@
+class Solution {
+public:
+    /**
+     * @param A: a string A
+     * @param B: a string B
+     * @return: return the minimum number of operations to transform
+     */
+    int transform(string &A, string &B) {
+        // write your code here
+ 
+        if (A.length()!=B.length()) return -1;
+        if (A==B) return 0;
+        string s1=A,s2=B;
+        sort(s1.begin(),s1.end());
+        sort(s2.begin(),s2.end());
+        if (s1!=s2) return -1;
+        int Ia=A.length()-1,Ib=B.length()-1;
+        
+        while (Ia>0){
+            char tmp=B[Ib];
+            int ia=Ia;
+            while (ia>=0){
+                if(A[ia]==tmp) break;
+                ia--;
+            }
+            if (ia>=0){
+                Ia=ia-1;
+                Ib--;
+            }
+            else{
+                break;
+            }
+            
+        }
+        if (Ib==B.length()-1) return -1;
+        return Ib+1;
+    }
+};
