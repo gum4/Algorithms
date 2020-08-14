@@ -1,0 +1,23 @@
+class Solution {
+public:
+    /**
+     * @param nums: nums an array of scores
+     * @return: check if player 1 will win
+     */
+    bool PredictTheWinner(vector<int> &nums) {
+        // write your code here】
+        int N=nums.size();
+        if (N==1||N==2) return true;
+        //记录一段区间内第一个人比第二个人多的数目
+        vector<vector<int>> res(N,vector<int> (N,0));
+        for (int i=0;i<N;i++){
+            res[i][i]=nums[i];
+        }        
+        for (int len=2;len<=N;len++){
+            for (int i=0;i+len-1<N;i++){
+                res[i][i+len-1]=max(nums[i]-res[i+1][i+len-1],nums[i+len-1]-res[i][i+len-2]);
+            }
+        }
+        return res[0][N-1]>=0;
+    }
+};
