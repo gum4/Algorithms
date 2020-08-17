@@ -1,0 +1,25 @@
+class Solution {
+public:
+    /**
+     * @param height: n people's height
+     * @return: return the maxium number of people in square matrix
+     */
+     
+    int helper(vector<int> & V, int index, int l){
+        if (index>=V.size()) return 0;
+        if (index+l-1<V.size()&&V[index+l-1]-V[index]<=2) {
+            return 1+helper(V,index+l,l);
+            
+        }
+        return helper(V,index+1,l);
+    }
+    int MaxPeopleNumber(vector<int> &height) {
+        // write your code here
+        if (height.empty()) return 0;
+        int N=height.size();
+        sort(height.begin(),height.end());
+        int res=1;
+        while (res<=helper(height,0,res)) ++res;
+        return pow(res-1,2);
+    }
+};
