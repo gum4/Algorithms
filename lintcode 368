@@ -1,0 +1,54 @@
+class Solution {
+public:
+    /**
+     * @param expression: a list of strings
+     * @return: an integer
+     */
+     
+     
+     
+    int nextBra(vector<string> & E, int index){
+        int count=1,i;
+        for (i=index+1;i<E.size();i++){
+            if(E[i]=="(") count++;
+            else if (E[i]==")") count--;
+            if (count==0) break;
+        }
+        return i;
+    }
+    
+    int helper(vector<string> & E, int i, int j){
+        if (i>j) return 0;
+        if (i==j) return stoi(E[i]);
+        
+        int start=E[i]!="+"&&E[i]!="-"?i:i+1;
+        
+        int rec=start;
+        //int res=start<j?1:stoi(E[start]);
+        int res=1;
+        while (start<=j){
+            if (E[start]=="("){
+                int next=nextBra(E,start);
+                int tmp=helper(E,start+1,next-1);
+                if (start==rec||E[start-1]=="*") res*=tmp;
+                else res/=tmp;
+                start=next;
+            }
+            else{
+                 if (start==rec||E[start-1]=="*") res*=stoi(E[start]);
+                 else res/=stoi(E[start]);
+                
+            }
+            if (start+1>=j||E[start+1]!="*"&&E[start+1]!="/") break;
+            start+=2;
+        }
+        if ((E[i]!="+"&&E[i]!="-")||E[i]=="+") return res+helper(E,start+1,j);
+        return -res+helper(E,start+1,j);
+    }
+    int evaluateExpression(vector<string> &expression) {
+        // write your code here
+        if (expression.empty()) return 0;
+        int N=expression.size();
+        return helper(expression,0,N-1);
+    }
+};
