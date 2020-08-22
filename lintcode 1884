@@ -1,0 +1,39 @@
+class Solution {
+public:
+    /**
+     * @param arr: the array of bottles
+     * @return: the minimum number of times you can take all the bottles
+     */
+    int takeAwayTheBottle(vector<int> &arr) {
+        // Write your code here.
+        if (arr.empty()) return 0;
+        int N=arr.size();
+        vector<vector<int>> res(N,vector<int> (N,N));
+        for (int i=0;i<N;++i){
+            res[i][i]=1;
+        }
+        for (int i=0;i+1<N;++i){
+            res[i][i+1]=arr[i]==arr[i+1]?1:2;
+        }
+        // for (int len=3;len<=N;++len){
+        //     for (int i=0;i+len-1<N;++i){
+        //         res[i][i+len-1]=len;
+        //     }
+        // }
+        for (int len=3;len<=N;++len){
+            
+            for (int i=0;i+len-1<N;++i){
+                int j=i+len-1;
+                if (arr[i]==arr[j]){
+                    res[i][j]=res[i+1][j-1];
+                }
+                else{
+                    for (int k=i;k<j;++k){
+                        res[i][j]=min(res[i][j],res[i][k]+res[k+1][j]);
+                    }
+                }
+            }
+        }
+        return res[0][N-1];
+    }
+};
