@@ -1,0 +1,46 @@
+class Solution {
+public:
+    /**
+     * @param words: the list of word.
+     * @return: the length of the longest string chain.
+     */
+     static bool cmp(const string &a, const string &b) {
+        return a.length() < b.length();
+    }
+     bool helper (string s1, string s2){
+         if (s2.length()!=s1.length()+1) return false;
+         for (int i=0;i<s2.length();++i){
+             if (s1==s2.substr(0,i)+s2.substr(i+1)) return true;
+         }
+         return false;
+     }
+    int longestStrChain(vector<string> &words) {
+        // 
+        if (words.empty()) return 0;
+        vector<string> W=words;
+        int N=words.size();
+        sort(W.begin(),W.end(),cmp);
+        
+        vector<int> res;
+        
+        res.push_back(1);
+        
+        int index=1,MAX=1;
+        
+        while (index<N){
+            
+            int tmp=0;
+            for (int i=0;i<res.size();++i){
+                if (helper(W[i],W[index])){
+                    tmp=max(tmp,res[i]);
+                }
+            }
+            res.push_back(tmp+1);
+            MAX=max(MAX,tmp+1);
+            index++;
+        }
+        
+        //for (auto s: res) cout<<s<<endl;
+        return MAX;
+    }
+};
