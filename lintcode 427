@@ -1,0 +1,46 @@
+class Solution {
+public:
+    /**
+     * @param n: n pairs
+     * @return: All combinations of well-formed parentheses
+     */
+     
+    string makePair(int n){
+        return string(n,'(')+string(n,')');
+    }
+    
+    unordered_set<string>  helper(int n){
+        unordered_set<string> V;
+        if (n==0) return V;
+        if (n==1) {
+            V.insert("()");
+            return V;
+        }
+        
+        unordered_set<string> pre=helper(n-1);
+        unordered_set<string>::iterator itr;
+        
+        for (int i=1;i<n;++i){
+            unordered_set<string> tmp=helper(n-i);
+            for (itr=tmp.begin();itr!=tmp.end();itr++){
+                V.insert(makePair(i)+(*itr));
+                V.insert((*itr)+makePair(i));
+                
+            }
+        }
+        for (itr=pre.begin();itr!=pre.end();itr++){
+            V.insert("("+(*itr)+")");
+        }
+        return V;
+    }
+    vector<string> generateParenthesis(int n) {
+        // write your code here
+        unordered_set<string> S=helper(n);
+        vector<string> V;
+        unordered_set<string>::iterator itr;
+        for (itr=S.begin();itr!=S.end();itr++){
+            V.push_back(*itr);
+        }
+        return V;
+    }
+};
