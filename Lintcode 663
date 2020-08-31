@@ -1,0 +1,49 @@
+class Solution {
+public:
+    /**
+     * @param rooms: m x n 2D grid
+     * @return: nothing
+     */
+     
+    bool within(int i, int j,int M, int N){
+        return 0<=i&&i<M&&0<=j&&j<N;
+    } 
+    int helper(vector<int> v, vector<vector<int>> &rooms, vector<vector<int>>& dir){
+        int res=0,l=rooms[0].size();
+        queue<vector<int>> Q;
+        unordered_set<int> visited;
+        visited.insert(v[0]*l+v[1]);
+        Q.push(v);
+        while(!Q.empty()){
+            for (int i=Q.size()-1;i>=0;--i){
+                vector<int> vv=Q.front();
+                visited.insert(vv[0]*l+vv[1]);
+                Q.pop();
+                if (rooms[vv[0]][vv[1]]==0) return res;
+                for (int i=0;i<dir.size();++i){
+                    vector<int> tmp=vv;
+                    tmp[0]+=dir[i][0];
+                    tmp[1]+=dir[i][1];
+                    if (!within(tmp[0],tmp[1],rooms.size(),rooms[0].size())||rooms[tmp[0]][tmp[1]]==-1) continue;
+                    if (visited.count(tmp[0]*l+tmp[1])) continue;
+                    Q.push(tmp);  
+                }
+            }
+            ++res;
+        }
+        return -1;
+    }
+    void wallsAndGates(vector<vector<int>> &rooms) {
+        // write your code here
+        vector<vector<int>> dir={{0,-1},{0,1},{-1,0},{1,0}};
+        //cout<<helper({1,0},rooms,dir)<<endl;
+        for (int i=0;i<rooms.size();++i){
+            for (int j=0;j<rooms[i].size();++j){
+                if (rooms[i][j]==2147483647) {
+                    int tmp=helper({i,j},rooms,dir);
+                    if (tmp!=-1) rooms[i][j]=tmp;
+                }
+            }
+        }
+    }
+};
