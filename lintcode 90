@@ -1,0 +1,34 @@
+class Solution {
+public:
+    /*
+     * @param A: an integer array
+     * @param k: a postive integer <= length(A)
+     * @param target: an integer
+     * @return: A list of lists of integer
+     */
+     
+    void helper(vector<int> &A,vector<int>& v, vector<vector<int>>& V, int index, int target, int k){
+        //cout<<target<<" "<<k<<endl;
+        if (k==0) {
+            if (target==0){
+                V.push_back(v);
+            }
+            else return;
+        }
+        for (int i=index;i<A.size();++i){
+            if (A[i]<=target){
+                v.push_back(A[i]);
+                helper(A,v,V,i+1,target-A[i],k-1);
+                v.pop_back();
+            }
+        }
+    }
+    vector<vector<int>> kSumII(vector<int> &A, int k, int target) {
+        // write your code here
+        
+        vector<int> v;
+        vector<vector<int>> V;
+        helper(A,v,V,0,target,k);
+        return V;
+    }
+};
