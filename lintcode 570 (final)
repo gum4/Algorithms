@@ -1,0 +1,39 @@
+class Solution {
+public:
+    /**
+     * @param n: An integer
+     * @param str: a string with number from 1-n in random order and miss one number
+     * @return: An integer
+     */
+    int res;
+    void helper (string &str, unordered_set<int> &S,int n){
+        // unordered_set<int>::iterator itr;
+        // for (itr=S.begin();itr!=S.end();itr++) cout<<*itr<<" ";
+        // //cout<<endl;
+        // cout<<" : "<<str<<endl;
+        if (str[0]=='0') return;
+        if (str==""&&S.size()==1){
+            res=*(S.begin());
+            return;
+        }
+        unordered_set<int> tmpS=S;
+        string tmpStr=str;
+        for (int i=1; i<=tmpStr.length();++i){
+            int cur=stoi(str.substr(0,i));
+            if (cur>n) break;
+            if (!S.count(cur)) continue;
+            str=str.substr(i);
+            S.erase(cur);
+            helper(str,S,n);
+            str=tmpStr;
+            S=tmpS;
+        }
+    }
+    int findMissing2(int n, string &str) {
+        // write your code here
+        unordered_set<int> S;
+        for (int i=1;i<=n;++i) S.insert(i);
+        helper(str,S,n);
+        return res;
+    }
+};
