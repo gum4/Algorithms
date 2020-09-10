@@ -1,0 +1,35 @@
+/**
+ * Definition of TreeNode:
+ * class TreeNode {
+ * public:
+ *     int val;
+ *     TreeNode *left, *right;
+ *     TreeNode(int val) {
+ *         this->val = val;
+ *         this->left = this->right = NULL;
+ *     }
+ * }
+ */
+
+class Solution {
+public:
+    /**
+     * @param root: root of the given tree
+     * @return: whether it is a mirror of itself 
+     */
+     
+    bool helper (TreeNode * r1, TreeNode * r2){
+        if (!r1&&!r2) return true;
+        if (!r1||!r2) return false;
+        bool b1=r1->val==r2->val;
+        bool b2=helper(r1->left,r2->right);
+        bool b3=helper(r1->right,r2->left);
+        return b1&&b2&&b3;
+    }
+    bool isSymmetric(TreeNode * root) {
+        // Write your code here
+        if (!root) return true;
+        if (!root->left&&root->right||!root->right&&root->left) return false;
+        return helper(root->left, root->right);
+    }
+};
