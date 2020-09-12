@@ -1,0 +1,49 @@
+class Solution {
+public:
+    /**
+     * @param n: The number of points
+     * @param G: The description of graph
+     * @param S: The point S
+     * @param T: The point T
+     * @return: output all the paths from S to T
+     */
+     
+     
+    void helper(vector<vector<int>>& stor, int S, int T, unordered_set<int> & SS, vector<int> & tmp, vector<vector<int>>& Path){
+        if (S==T) {
+            
+            Path.push_back(tmp);
+            return;
+        }
+        unordered_set<int> tmpSS=SS;
+        
+        for (int i=0;i<stor[S].size();++i){
+            if (SS.count(stor[S][i])) continue;
+            tmp.push_back(stor[S][i]);
+            SS.insert(stor[S][i]);
+            helper (stor,stor[S][i],T,SS,tmp,Path);
+            SS=tmpSS;
+            tmp.pop_back();
+        }
+        
+        
+        
+    }
+    vector<vector<int>> getPath(int n, vector<vector<int>> &G, int S, int T) {
+        // Write your code here
+        unordered_set<int> SS;
+        SS.insert(S);
+        vector<vector<int>> V(n);
+        for (int i=0;i<G.size();++i){
+            V[G[i][0]].push_back(G[i][1]);
+            V[G[i][1]].push_back(G[i][0]);
+        }
+        vector<vector<int>> Path;
+        vector<int> tmp;
+        tmp.push_back(S);
+        helper(V,S,T,SS,tmp,Path);
+        sort(Path.begin(),Path.end());
+        return Path;
+        
+    }
+};
