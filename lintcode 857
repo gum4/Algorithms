@@ -1,0 +1,41 @@
+class Solution {
+public:
+    /**
+     * @param S: a string
+     * @param T: a string
+     * @return: the minimum substring of S
+     */
+
+     int helper (string & S, int i1, string & T, int i2){
+         if (S.length()-i1<T.length()-i2) {
+             return INT_MIN;
+         }
+         if (i2==T.length()) return 0;
+         
+         if (S[i1]==T[i2]) {
+             return 1+helper(S,i1+1,T,i2+1);
+         }
+         else{
+             return 1+helper(S,i1+1,T,i2);
+         }
+         
+         
+     }
+    string minWindow(string &S, string &T) {
+        // Write your code here
+        if (T.empty()||S.length()<T.length()) return "";
+        map<int,vector<int>> M;
+        for (int i=0;i<S.length();++i){
+            if (S[i]==T[0]){
+                int res=helper(S,i,T,0);
+                if (res>0) M[res].push_back(i);
+            }
+        }
+        if (M.empty()) return "";
+        map<int,vector<int>>::iterator itr=M.begin();
+        int I=itr->first;
+        vector<int> J=itr->second;
+        sort(J.begin(),J.end());
+        return S.substr(J[0],I);
+    }
+};
