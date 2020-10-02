@@ -1,0 +1,59 @@
+/**
+ * Definition of TreeNode:
+ * class TreeNode {
+ * public:
+ *     int val;
+ *     TreeNode *left, *right;
+ *     TreeNode(int val) {
+ *         this->val = val;
+ *         this->left = this->right = NULL;
+ *     }
+ * }
+ */
+
+class Solution {
+public:
+    /**
+     * @param root: a binary tree
+     * @param sum: the sum
+     * @return: the scheme
+     */
+     
+    void helper(TreeNode * root, int sum, vector<vector<int>>& V, vector<int> & v ){
+        //cout<<root->val<<" "<<sum<<endl;
+        if (!root->left&&!root->right){
+            v.push_back(root->val);
+            if (sum==root->val){
+                
+                V.push_back(v);
+            }
+            v.pop_back();
+            return;
+        }
+        
+        if (root->left&&!root->right){
+            v.push_back(root->val);
+            helper(root->left,sum-root->val, V, v);
+            v.pop_back();
+        }
+        else if (root->right&&!root->left){
+            v.push_back(root->val);
+            helper(root->right,sum-root->val, V, v);
+            v.pop_back();
+        }
+        else{
+            v.push_back(root->val);
+            helper(root->left,sum-root->val, V, v);
+            helper(root->right,sum-root->val, V, v);
+            v.pop_back();
+        }
+        
+    }
+    vector<vector<int>> pathSum(TreeNode * root, int sum) {
+        // Write your code here.
+        vector<vector<int>> V;
+        vector<int>  v;
+        helper(root,sum,V,v);
+        return V;
+    }
+};
