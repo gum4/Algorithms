@@ -1,0 +1,38 @@
+class Solution {
+public:
+    /**
+     * @param Mine_map: an array represents the map.
+     * @param Start: the start position.
+     * @return: return an array including all reachable positions.
+     */
+    vector<vector<int>> Mine_sweeping(vector<vector<int>> &Mine_map, vector<int> &Start) {
+        // write your code here
+        int m=Mine_map.size(), n=Mine_map[0].size();
+        vector<vector<int>> res;
+        queue<int> Q;
+        Q.push(Start[0]*n+Start[1]);
+        unordered_set<int> visited;
+        visited.insert(Start[0]*n+Start[1]);
+        vector<vector<int>> dir={{0,1},{0,-1},{1,0},{-1,0}};
+        while (!Q.empty()){
+            for (int i=Q.size()-1;i>=0;--i){
+                int I=Q.front();
+                int p=I/n,q=I%n;
+                res.push_back({p,q});
+                Q.pop();
+                if (Mine_map[p][q]==0) continue;
+                for (int j=0;j<dir.size();++j){
+                    int p1=p,q1=q;
+                    p1+=dir[j][0];
+                    q1+=dir[j][1];
+                    if (p1<0||p1>=m||q1<0||q1>=n) continue;
+                    int I1=p1*n+q1;
+                    if (visited.count(I1)) continue;
+                    visited.insert(I1);
+                    Q.push(I1);
+                }
+            }
+        }
+        return res;
+    }
+};
