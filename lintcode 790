@@ -1,0 +1,69 @@
+class Solution {
+public:
+    /**
+     * @param generator: Generating set of rules.
+     * @param startSymbol: Start symbol.
+     * @param symbolString: Symbol string.
+     * @return: Return true if the symbol string can be generated, otherwise return false.
+     */
+    bool helper (unordered_map<string, unordered_set<string>>& M, unordered_set<string> & visited, string&  s1, string&  s2, string l, string r){
+        //cout<<s1<<" "<<s2<<endl;
+        
+        if (s1==s2) return true;
+        unordered_map<string, unordered_set<string>>::iterator itr1;
+        for (itr1=M.begin();itr1!=M.end();itr1++){
+            string cmp=itr1->first;
+            
+            string::size_type pos;
+            pos=s1.find(cmp);
+            if (pos==s1.npos) continue;
+            unordered_set<string> tmpS=itr1->second;
+            for (auto B: tmpS){
+                if (l==cmp&&r==B) continue;
+                string tmp=s1;
+                tmp=s1.substr(0,pos)+B+s1.substr(pos+cmp.length());
+                cout<<tmp<<endl;
+                if (visited.count(tmp)) continue;
+                visited.insert(tmp);
+                if (helper(M,visited,tmp,s2,cmp,B)) return true;
+            }
+        }
+        return false;
+    }
+    bool canBeGenerated(vector<string> &generator, char startSymbol, string &symbolString) {
+        // Write  your code here.
+        string Start="";
+        Start+=startSymbol;
+        if (Start==symbolString) return true;
+        unordered_map<string, unordered_set<string>> M;
+        for (int i=0;i<generator.size();++i){
+            string tmp=generator[i];
+            
+            int index=0;
+            while (tmp[index]!=' '){
+                ++index;
+            }
+            M[tmp.substr(0,index)].insert(tmp.substr(index+4));
+        }
+        unordered_set<string> visited;
+        visited.insert(Start);
+        // unordered_map<string, unordered_set<string>>::iterator itr1;
+        // unordered_set<string>::iterator itr2;
+        // for (itr1=M.begin();itr1!=M.end();itr1++){
+        //     cout<<(itr1)->first<<" : ";
+        //     unordered_set<string> A1=(itr1)->second;
+        //     for (itr2=A1.begin();itr2!=A1.end();itr2++){
+        //         cout<<*itr2<<" ";
+        //     }
+        //     cout<<endl;
+        // }
+        // string s1="AbcdeA",s2="bcd",s3="BCD";
+        // string::size_type pos;
+        // pos=s1.find(s2);
+        // string S1=s1;
+        //         S1.replace(s1.find(s3), s2.length(),s2);
+        //         cout<<S1<<endl;
+        return helper(M, visited,Start,symbolString,"#","#");
+        
+    }
+};
