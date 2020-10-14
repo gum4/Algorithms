@@ -1,0 +1,58 @@
+class Solution {
+private:
+    static bool cmp(vector<int> v1, vector<int> v2){
+        return v1[0]<v2[0];
+    }
+public:
+    /**
+     * @param s: a string
+     * @return:  an array containing the length of each part
+     */
+    
+    vector<int> splitString(string &s) {
+        // write your code here.
+        vector<int> l(26,-1),r(26,INT_MAX);
+        for (int i=0;i<s.length();++i){
+            l[s[i]-'A']=max(l[s[i]-'A'],i);
+        }
+        for (int i=s.length()-1;i>=0;--i){
+            r[s[i]-'A']=min(r[s[i]-'A'],i);
+        }
+        vector<vector<int>> res;
+        
+        vector<int> visited(res.size(),0);
+        for (int i=0;i<26;++i){
+            if (r[i]==INT_MAX||l[i]==-1) continue;
+            // if (r[i]==l[i]) continue;
+            res.push_back({r[i],l[i]});
+        }
+        sort(res.begin(),res.end(),cmp);
+        vector<vector<int>> V;
+        // for (int i=0;i<res.size();++i){
+        //     cout<<res[i][0]<<" "<<res[i][1]<<endl;
+        // }
+        
+        for (int i=0;i<res.size();++i){
+            
+            if (V.size()==0) {
+                V.push_back(res[i]);
+                continue;
+            }
+            bool Insert=false;
+            for (int j=0;j<V.size();++j){
+                if(!(res[i][1]<V[j][0]||res[i][0]>V[j][1])){
+                    V[j]={min(V[j][0],res[i][0]),max(V[j][1],res[i][1])};
+                    Insert=true;
+                }
+            }
+            if (!Insert){
+                V.push_back(res[i]);
+            }
+        }
+        vector<int> output;
+        for (int i=0;i<V.size();++i){
+            output.push_back(V[i][1]-V[i][0]+1);
+        }
+        return output;
+    }
+};
