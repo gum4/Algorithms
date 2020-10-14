@@ -1,0 +1,41 @@
+class Solution {
+public:
+    /**
+     * @param n: the number of members in team.
+     * @param groups: the groups.
+     * @return: return how many members will get notifications.
+     */
+    int teamNotification(int n, vector<vector<int>> &groups) {
+        // write your code here.
+        vector<unordered_set<int>> V;
+        for (int i=0;i<groups.size();++i){
+            unordered_set<int> S(groups[i].begin(),groups[i].end());
+            V.push_back(S);
+        }
+        vector<int> visited(groups.size(),0);
+        unordered_set<int> flag;
+        flag.insert(0);
+        queue<int> Q;
+        Q.push(0);
+        vector<int> res;
+        while (!Q.empty()){
+            for (int i=Q.size()-1;i>=0;--i){
+                int I=Q.front();
+                Q.pop();
+                res.push_back(I);
+                for (int j=0;j<V.size();++j){
+                    if (visited[j]==1) continue;
+                    if (V[j].count(I)==0) continue;
+                    visited[j]=1;
+                    for (auto A: V[j]){
+                        if (flag.count(A)) continue;
+                        flag.insert(A);
+                        Q.push(A);
+                        
+                    }
+                }
+            }
+        }
+        return res.size();
+    }
+};
