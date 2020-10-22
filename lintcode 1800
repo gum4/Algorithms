@@ -1,0 +1,26 @@
+class Solution {
+public:
+    vector<int> getArray(vector<double> &A, int target) {
+         int N=A.size();
+         int sum=0;
+         vector<double> V1,V2;
+         vector<int> output;
+         for (int i=0;i<N;++i){
+             sum+=(int)A[i];
+             output.push_back((int)A[i]);
+             V1.push_back(A[i]-(int)A[i]);
+             V2.push_back(1+(int)A[i]-A[i]);
+         }
+         int res=target-sum;
+         //N个中选res个，每个是1
+         
+         vector<int> idx(N);
+        //使用iota对向量赋0~？的连续值
+        iota(idx.begin(), idx.end(), 0);
+        sort(idx.begin(), idx.end(), [&V2](int i1, int i2) {return V2[i1] < V2[i2];});
+        for (int i=0;i<res;++i){
+            output[idx[i]]++;
+        }
+        return output;
+    }
+};
