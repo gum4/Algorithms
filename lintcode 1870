@@ -1,0 +1,43 @@
+class Solution {
+public:
+    /**
+     * @param str: the string
+     * @return: the number of substrings 
+     */
+    int stringCount(string &str) {
+        // Write your code here.
+        unordered_map<int,int> M,res;
+        int index=0;
+        while (index<str.length()){
+            if (str[index]=='0'){
+                int j=index;
+                while (j<str.length()&&str[j]=='0') ++j;
+                M[j-index]++;
+                index=j;
+            }
+            else{
+                ++index;
+            }
+        }
+        unordered_map<int,int>::iterator itr;
+        for (itr=M.begin();itr!=M.end();itr++){
+            int num=itr->second,len=itr->first;
+            
+            for (int i=1;i<=len;++i){
+                res[i]+=num*(len-i+1);
+            }
+            
+        }
+        int output=0;
+        // for (itr=M.begin();itr!=M.end();itr++){
+        //     cout<<itr->first<<" "<<itr->second<<endl;
+            
+        // }
+        // cout<<endl;
+        for (itr=res.begin();itr!=res.end();itr++){
+            output+=itr->second;
+            
+        }
+        return output;
+    }
+};
