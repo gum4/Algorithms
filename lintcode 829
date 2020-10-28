@@ -1,0 +1,44 @@
+class Solution {
+public:
+    /**
+     * @param pattern: a string,denote pattern string
+     * @param str: a string, denote matching string
+     * @return: a boolean
+     */
+     
+     
+    bool helper (string  pattern, string  str,vector<string> &stor, unordered_set<string> &visited){
+        if (pattern.empty()){
+            if (str.empty()) return true;
+            return false;
+        }
+        if (str.empty()) return false;
+        string cur=stor[pattern[0]-'a'];
+        if (!cur.empty()){
+            if (str.length()<cur.length()) return false;
+            if (cur!=str.substr(0,cur.length())) return false;
+            if (helper(pattern.substr(1),str.substr(cur.length()),stor,visited)) return true;
+            return false;
+        }
+        else{
+            for (int len=1;len<=str.length();++len){
+                string tmp=str.substr(0,len);
+                if (visited.count(tmp)) continue;
+                visited.insert(tmp);
+                stor[pattern[0]-'a']=tmp;
+                if (helper(pattern.substr(1),str.substr(len),stor,visited)) return true;
+                stor[pattern[0]-'a']="";
+                visited.erase(tmp);
+            }
+            return false;
+        }
+    }
+    
+    
+    bool wordPatternMatch(string &pattern, string &str) {
+        // write your code here
+        vector<string> stor(26,"");
+        unordered_set<string> visited;
+        return helper(pattern,str,stor,visited);
+    }
+};
