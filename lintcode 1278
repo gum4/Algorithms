@@ -1,0 +1,52 @@
+class Solution {
+public:
+    /**
+     * @param matrix: a 2D matrix
+     * @param k: an integer
+     * @return: the max sum of a rectangle in the matrix such that its sum is no larger than k
+     */
+    int maxSumSubmatrix(vector<vector<int>> &matrix, int k) {
+        // Write your code here
+        int M=matrix.size(),N=matrix[0].size();
+        vector<vector<int>> sum(M,vector<int> (N,0));
+        sum[0][0]=matrix[0][0];
+        for (int i=1;i<M;++i){
+            sum[i][0]=sum[i-1][0]+matrix[i][0];
+        }
+        for (int i=1;i<N;++i){
+            sum[0][i]=sum[0][i-1]+matrix[0][i];
+        }
+        for (int i=1;i<M;++i){
+            for (int j=1;j<N;++j){
+                sum[i][j]=sum[i][j-1]+sum[i-1][j]+matrix[i][j]-sum[i-1][j-1];
+            }
+        }
+        // for (int i=0;i<M;++i){
+        //     for (int j=0;j<N;++j){
+        //         cout<<sum[i][j]<<" ";
+        //     }
+        //     cout<<endl;
+        // }
+        int MAX=INT_MIN;
+        for (int i=0;i<M;++i){
+            for (int j=0;j<N;++j){
+                if (sum[i][j]<=k) MAX=max(MAX,sum[i][j]);
+                for (int p=1;p<=j;++p){
+                    int tmp=sum[i][j]-sum[i][p-1];
+                    if (tmp<=k) MAX=max(MAX,tmp);
+                }
+                for (int p=1;p<=i;++p){
+                    int tmp=sum[i][j]-sum[p-1][j];
+                    if (tmp<=k) MAX=max(MAX,tmp);
+                }
+                for (int p=1;p<=i;++p){
+                    for (int q=1;q<=j;++q){
+                        int tmp=sum[i][j]-sum[p-1][j]-sum[i][q-1]+sum[p-1][q-1];
+                        if (tmp<=k) MAX=max(MAX,tmp);
+                    }
+                }
+            }
+        }
+        return MAX;
+    }
+};
