@@ -1,0 +1,60 @@
+class Solution {
+public:
+    /**
+     * @param n: a integer
+     * @param flights: a 2D array
+     * @param src: a integer
+     * @param dst: a integer
+     * @param K: a integer
+     * @return: return a integer
+     */
+    int PRICE=INT_MAX;
+    void helper(unordered_map<int, vector<pair<int,int>>>& M, unordered_set<int>& visited, int price, int s, int d, int k, int K){
+        //cout<<s<<" : "<<price<<" "<<k<<endl;
+        if (k==K) {
+            if (s!=d) return;
+            else {
+                PRICE=price;
+                return ;
+            }
+        }
+        if (s==d){
+            PRICE=min(PRICE, price);
+            return;
+        }
+        unordered_map<int, vector<pair<int,int>>>::iterator itr;
+        
+        //unordered_set<int> tmp=visited;
+        itr=M.find(s);
+        vector<pair<int,int>> V=itr->second;
+        for (size_t i=0;i<V.size();++i){
+            if (visited.count(V[i].first)||price+V[i].second>PRICE) continue;
+            visited.insert(V[i].first);
+            helper(M,visited,price+V[i].second,V[i].first,d,k+1,K);
+            visited.erase(V[i].first);
+        }
+    } 
+    
+    int findCheapestPrice(int n, vector<vector<int>> &flights, int src, int dst, int K) {
+        // write your code here
+        
+        unordered_map<int, vector<pair<int,int>>> M;
+        unordered_set<int> visited;
+        for (size_t i=0;i<flights.size();++i){
+            
+            M[flights[i][0]].push_back({flights[i][1],flights[i][2]});
+        }
+        unordered_map<int, vector<pair<int,int>>>::iterator itr;
+        // for (itr=M.begin();itr!=M.end();itr++){
+        //     cout<<itr->first<<endl;
+        //     for (size_t i=0;i<(itr->second).size();++i){
+        //         cout<<(itr->second)[i].first<<" "<<(itr->second)[i].second<<"//";
+        //     }
+        //     cout<<endl;
+        // }
+        helper(M,visited,0,src,dst,1,K+2);
+        if (PRICE==INT_MAX) return -1;
+        return PRICE;
+        
+    }
+};
