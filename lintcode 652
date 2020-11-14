@@ -1,0 +1,30 @@
+class Solution {
+public:
+    /**
+     * @param n: An integer
+     * @return: a list of combination
+     */
+     
+    void helper ( int N, int I,vector<vector<int>>& V, vector<int> & v){
+        //cout<<N<<endl;
+        
+        for (size_t i=I;i<=sqrt(N);++i){
+            if (N % i!=0) continue;
+            vector<int> newV=v;
+            newV.push_back(i);
+            helper(N/i,i,V,newV);
+            newV.push_back(N/i);
+            V.push_back(newV);
+            
+        }
+    }
+    vector<vector<int>> getFactors(int n) {
+        // write your code here
+        if (n==1) return {};
+        vector<int> v;
+        vector<vector<int>> V;
+        helper(n,2,V,v);
+        
+        return V;
+    }
+};
