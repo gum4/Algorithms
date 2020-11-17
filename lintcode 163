@@ -1,0 +1,36 @@
+class Solution {
+public:
+    /**
+     * @param n: An integer
+     * @return: An integer
+     */
+     
+    int helper(int l, int r){
+        if (l>r) return 0;
+        if (l==r) return 1;
+        //if (r-l==1) return 2;
+        int res=helper(l+1,r)+helper(l,r-1);
+        for (size_t i=l+1;i<=r-1;++i){
+            res+=helper(l,i-1)*helper(i+1,r);
+        }
+        return res;
+        
+    }
+    int numTrees(int n) {
+        // write your code here
+        if (n==0) return 1;
+        
+        vector<vector<int>> res(n,vector<int> (n,1));
+        for (size_t len=2;len<=n;++len){
+            for (size_t i=0;i+len-1<n;++i){
+                size_t j=i+len-1;
+                int I=res[i][j-1]+res[i+1][j];
+                for (size_t k=i+1;k<=j-1;++k){
+                    I+=res[i][k-1]*res[k+1][j];
+                }
+                res[i][j]=I;
+            }
+        }
+        return res[0][n-1];
+    }
+};
