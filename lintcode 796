@@ -1,0 +1,57 @@
+class Solution {
+public:
+    /**
+     * @param deadends: the list of deadends
+     * @param target: the value of the wheels that will unlock the lock
+     * @return: the minimum total number of turns 
+     */
+     
+    vector<string> helper(string s, unordered_set<string> & visited, unordered_set<string> & dd){
+        vector<string> res;
+        for (size_t i=0;i<s.length();++i){
+            
+            string tmp1=s,tmp2=s;
+            int I=s[i]-'0';
+            int l=(I==0)?9:I-1,r=(I==9)?0:I+1;
+            tmp1[i]='0'+l;
+            tmp2[i]='0'+r;
+            if (visited.count(tmp1)==0&&dd.count(tmp1)==0){
+                visited.insert(tmp1);
+                res.push_back(tmp1);
+            }
+            if (visited.count(tmp2)==0&&dd.count(tmp2)==0){
+                visited.insert(tmp2);
+                res.push_back(tmp2);
+            }
+            
+        }
+        return res;
+        
+    }
+    int openLock(vector<string> &deadends, string &target) {
+        // Write your code here
+        if (target=="0000") return 0;
+        
+        unordered_set<string> dd(deadends.begin(),deadends.end());
+        if (dd.count("0000")) return -1;
+        int res=0;
+        queue<string> Q;
+        Q.push("0000");
+        unordered_set<string> visited;
+        visited.insert("0000");
+        while (!Q.empty()){
+            for (int i=Q.size()-1;i>=0;--i){
+                string s=Q.front();
+                Q.pop();
+                if (s==target) return res;
+                vector<string> V=helper(s,visited,dd);
+                for (size_t j=0;j<V.size();++j){
+                    Q.push(V[j]);
+                }
+            }
+            
+            ++res;
+        }
+        return -1;
+    }
+};
