@@ -1,0 +1,40 @@
+class Solution {
+public:
+    /**
+     * @param num: a string contains only digits 0-9
+     * @param target: An integer
+     * @return: return all possibilities
+     */
+     
+     void helper(string num, vector<string>& V,int target, long change, long cur, string s){
+         if (num.empty()){
+             if (cur==target){
+                 V.push_back(s);
+             }
+             return;
+         }
+         for (size_t i=1;i<=num.length();++i){
+             string tmp=num.substr(0,i);
+             if (tmp[0]=='0'&&tmp.length()>1) continue;
+             string next=num.substr(i);
+             if (s.empty()){
+                 helper(next,V,target,stoll(tmp),stoll(tmp),tmp);
+             }
+             else{
+                 helper(next,V,target,stoll(tmp),cur+stoll(tmp),s+'+'+tmp);
+                 helper(next,V,target,-stoll(tmp),cur-stoll(tmp),s+'-'+tmp);
+                 helper(next,V,target,change*stoll(tmp),cur-change+change*stoll(tmp),s+'*'+tmp);
+             }
+         }
+         
+         
+     }
+     
+    vector<string> addOperators(string &num, int target) {
+        // write your code here
+        
+        vector<string> V;
+        helper(num,V,target,0,0,"");
+        return V;
+    }
+};
