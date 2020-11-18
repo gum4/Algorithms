@@ -1,0 +1,30 @@
+class Solution {
+public:
+    /**
+     * @param a: the list of salary
+     * @param target: the target of the sum
+     * @return: the cap it should be
+     */
+    int getCap(vector<int> &a, int target) {
+        // Write your code here.
+        int N=a.size();
+        sort(a.begin(),a.end(),greater<int>());
+        if (target>=a[0]*N) return target%N==0?target/N:target/N+1;
+        vector<int> sum(N,0);
+        sum[0]=a[0];
+        for (size_t i=1;i<N;++i){
+            sum[i]=sum[i-1]+a[i];
+        }
+        int res=0;
+        for (size_t i=0;i<N-1;++i){
+            //i之后有几个
+            int tmp=N-i-1;
+            int remain=target-sum[i];
+            //cout<<tmp<<" "<<remain<<endl;
+            int I=remain%tmp==0?remain/tmp:remain/tmp+1;
+            if (I<a[i]) res=I;
+        }
+        if (res==0) return target-sum[N-2];
+        return res;
+    }
+};
