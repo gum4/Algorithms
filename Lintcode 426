@@ -1,0 +1,41 @@
+class Solution {
+public:
+    /**
+     * @param s: the IP string
+     * @return: All possible valid IP addresses
+     */
+     
+     void helper(string s, string& tmp,vector<string>& V,int num){
+         if (num==0&&!s.empty()) return;
+         if (s.empty()) {
+             if (num==0) V.push_back(tmp);
+             return;
+         }
+         string ss=tmp;
+         if (s[0]=='0'){
+             if (s.length()==1) tmp+="0";
+             else tmp+="0.";
+             helper(s.substr(1),tmp,V,num-1);
+             tmp=ss;
+         } 
+         else{
+             for (size_t i=1;i<=s.length();++i){
+                 string cur=s.substr(0,i);
+                 if (stoi(cur)>255) break;
+                 tmp+=(i==s.length())?cur:cur+".";
+                 helper(s.substr(i),tmp,V,num-1);
+                 tmp=ss;
+             }
+         }
+         
+     }
+    vector<string> restoreIpAddresses(string &s) {
+        // write your code here
+        if (s.empty()) return {};
+        int num=4;
+        vector<string> V;
+        string tmp="";
+        helper(s,tmp,V,4);
+        return V;
+    }
+};
