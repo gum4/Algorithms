@@ -1,0 +1,63 @@
+class Solution {
+public:
+    /**
+     * @param arr: the arr
+     * @param k: the k
+     * @return: if all instances of value k in arr are connected
+     */
+     
+    void helper (vector<vector<int>> &arr, int i, int j, int M, int N,int k, vector<vector<int>>& dir){
+        
+        
+        queue<int> Q;
+        Q.push(i*N+j);
+        unordered_set<int> visited;
+        visited.insert(i*N+j);
+        
+        while (!Q.empty()){
+            for (int p=Q.size()-1;p>=0;--p){
+                int I=Q.front();
+                Q.pop();
+                
+                int l=I/N,r=I%N;
+                
+                arr[l][r]=k-1;
+                for (size_t q=0;q<4;++q){
+                    int ll=l+dir[q][0],rr=r+dir[q][1];
+                    
+                    int tmp=ll*N+rr;
+                    if (ll<0||ll>=M||rr<0||rr>=N||arr[ll][rr]!=k||visited.count(tmp)) continue;
+                    
+                    Q.push(tmp);
+                    visited.insert(tmp);
+                }
+                
+            }
+            
+        }
+        return;
+    }
+    bool judgeConnection(vector<vector<int>> &arr, int k) {
+        // Write your code here.
+        int M=arr.size(),N=arr[0].size();
+        vector<vector<int>> dir={{0,1},{0,-1},{1,0},{-1,0}};
+        bool exist=false;
+        for (size_t i=0;i<M;++i){
+            for (size_t j=0;j<N;++j){
+                if (arr[i][j]==k){
+                    if (exist) return false;
+                    helper(arr,i,j,M,N,k,dir);
+                    exist=true;
+                }
+            }
+        }
+        return true;
+        // helper(arr,0,0,M,N,2,dir);
+        // for (auto A:arr){
+        //     for (auto B:A){
+        //         cout<<B<<" ";
+        //     }
+        //     cout<<endl;
+        // }
+    }
+};
