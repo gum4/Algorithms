@@ -1,0 +1,55 @@
+class Solution {
+public:
+    /**
+     * @param matrix: the given matrix
+     * @return: The list of grid coordinates
+     */
+    
+    bool helper(vector<vector<int>> &matrix, unordered_set<int>& visited, unordered_set<int>& P, vector<vector<int>>& dir, int i, int j, int N){
+        if (P.count(i*N+j)) return true;
+        
+        
+        for (size_t d=0;d<dir.size();++d){
+            int ii=i+dir[d][0],jj=j+dir[d][1];
+            if (ii<0||ii>=matrix.size()||jj<0||jj>=N) continue;
+            
+            int tmp=ii*N+jj;
+            if (visited.count(tmp)) continue;
+            if (matrix[ii][jj]>matrix[i][j]) continue;
+            visited.insert(tmp);
+            if (helper(matrix,visited,P,dir,ii,jj,N)) return true;
+            visited.erase(tmp);
+        }
+        return false;
+    }
+    
+    vector<vector<int>> pacificAtlantic(vector<vector<int>> &matrix) {
+        // write your code here
+        
+        int M=matrix.size(),N=matrix[0].size();
+        unordered_set<int> P,A;
+        vector<vector<int>> dir={{0,1},{0,-1},{1,0},{-1,0}};
+        for (size_t i=0;i<M;++i){
+            P.insert(i*N+0);
+            A.insert(i*N+(N-1));
+        }
+        unordered_set<int> visited;
+        for (size_t j=0;j<N;++j){
+            P.insert(0*N+j);
+            A.insert((M-1)*N+j);
+        }
+        vector<vector<int>> res;
+        for (size_t i=0;i<M;++i){
+            for (size_t j=0;j<N;++j){
+                visited.insert(i*N+j);
+                bool b1=helper(matrix,visited,P,dir,i,j,N);
+                visited.clear();
+                visited.insert(i*N+j);
+                bool b2=helper(matrix,visited,A,dir,i,j,N);
+                visited.clear();
+                if (b1&&b2) res.push_back({i,j});
+            }
+        }
+        return res;
+    }
+};
