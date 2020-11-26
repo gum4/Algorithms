@@ -1,0 +1,63 @@
+class Solution {
+public:
+    
+    void helper(vector<vector<int>>& stor, int cur, int used, vector<string> &A,vector<int>& visited,string &res,string & order,int &mn, int len ){
+        if (len>=mn) return;
+        if (used==A.size()) {
+            mn=len;
+            res=order;
+            return;
+        }
+        string tmpO=order;
+        for (size_t i=0;i<A.size();++i){
+            if (visited[i]==1||i==cur) continue;
+            visited[i]=1;
+            char tmp=i+'0';
+            order+=tmp;
+            helper(stor,i,used+1,A,visited,res,order,mn,len+A[i].length()-stor[cur][i]);
+            
+            visited[i]=0;
+            order=tmpO;
+        }
+        
+        
+        
+    }
+    string shortestSuperstring(vector<string> &A) {
+        int N=A.size();
+        if (N==0) return 0;
+        vector<vector<int>> stor(N,vector<int> (N,0));
+        for (size_t i=0;i<N;++i){
+            for (size_t j=0;j<N;++j){
+                if (i==j) continue;
+                
+                int tmp=0,len1=A[i].length(),len2=A[j].length();
+                for (int index=1;index<=min(len1,len2);++index){
+                    if (A[i].substr(len1-index)==A[j].substr(0,index))
+                    tmp=max(tmp,index);
+                }
+                stor[i][j]=tmp;
+            }
+        }
+        int mn=INT_MAX;
+        string res="";
+        for (size_t i=0;i<N;++i){
+            vector<int> visited(N,0);
+            visited[i]=1;
+            string order=to_string(i);
+            helper(stor,i,1,A,visited,res,order,mn,A[i].length());
+        }
+        string output=A[res[0]-'0'];
+        for (size_t i=1;i<res.length();++i){
+            output+=A[res[i]-'0'].substr(stor[res[i-1]-'0'][res[i]-'0']);
+        }
+        
+        // for (auto A:stor){
+        //     for (auto B:A){
+        //         cout<<B<<" ";
+        //     }
+        //     cout<<endl;
+        // }
+        return output;
+    }
+};
