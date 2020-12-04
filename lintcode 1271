@@ -1,0 +1,34 @@
+class Solution {
+private:
+    int tarjan(int curr, int parent, int time, vector<vector<int>>& AdjLis, vector<int>& low, vector<vector<int>> &ans){
+        low[curr] = time;
+        int result=INT_MAX;
+        for (auto x: AdjLis[curr]){
+            if (x==parent)
+                continue;
+            int tmp;
+            if (low[x]==-1) {
+                tmp=tarjan(x, curr, time+1, AdjLis, low, ans);
+                if (tmp>time)
+                ans.push_back({min(curr,x),max(curr,x)});
+            }
+            else tmp = low[x];
+            result=min(result,tmp);
+        }
+        return result;
+    }
+public:
+    vector<vector<int>> criticalConnectionsinaNetwork(int n, vector<vector<int>>& connections) {
+        // 1. Constructing graph using Adjacency list
+        vector<vector<int>> AdjLis(n);
+        for (auto x: connections){
+            AdjLis[x[0]].push_back(x[1]);
+            AdjLis[x[1]].push_back(x[0]);
+        }
+        // 2. finding critical connections
+        vector<vector<int>> ans;
+        vector<int> low(n,-1);
+        tarjan(0, -1, 0, AdjLis, low, ans);
+        return ans;
+    }
+};
