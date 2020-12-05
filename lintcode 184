@@ -1,0 +1,43 @@
+class Solution {
+public:
+    /**
+     * @param nums: A list of non negative integers
+     * @return: A string
+     */
+     
+     bool cmp(string l, string r){
+         return l+r<=r+l;
+     }
+     void swap(vector<string>& arr, int i, int j) {
+        string tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+    }
+     
+     void quicksort(vector<string> & V, int low, int high){
+         if (low>=high) return;
+         int i=low,j=high;
+         string pivot=V[low];
+         while (i<j){
+             while(i<j&&cmp(pivot,V[j])) --j;
+             while (i<j&&cmp(V[i],pivot)) ++i;
+             swap(V,i,j);
+         }
+         swap(V,low,j);
+         quicksort(V,low,j-1);
+         quicksort(V,j+1,high);
+         
+     }
+    string largestNumber(vector<int> &nums) {
+        // write your code here
+        if (nums.empty()) return "";
+        int N=nums.size();
+        vector<string> V;
+        for (int A:nums) V.push_back(to_string(A));
+        string res="";
+        quicksort(V,0,N-1);
+        if (V[N-1]=="0") return "0";
+        for (auto A:V) res=A+res;
+        return res;
+    }
+};
