@@ -1,0 +1,38 @@
+class Solution {
+public:
+    int helper(int index, vector<vector<int>>& cost, int & mask, unordered_map<int,int>& M,int l1, int l2){
+        if (index==l1+l2) return 0;
+        int key=mask;
+        if (M.count(key)) return M[key];
+        int res=INT_MAX;
+        if (index<l1){
+            mask=mask|(1<<index);
+            for (size_t i=0;i<l2;++i){
+                int nextMask=mask|(1<<(i+l1));
+                res=min(res,cost[index][i]+helper(index+1,cost,nextMask,M,l1,l2));
+            }
+        }
+        else{
+            if ((mask & (1<<index))==0){
+                int tmpRes=INT_MAX;
+                for (size_t i=0;i<l1;++i){
+                    tmpRes=min(tmpRes,cost[i][index-l1]);
+                }
+                res=tmpRes+helper(index+1,cost,mask,M,l1,l2);
+            }
+            else{
+                res=helper(index+1,cost,mask,M,l1,l2);
+            }
+        }
+        return M[key]=res;
+        
+    }
+    
+    int connectTwoGroups(vector<vector<int>>& cost) {
+        int l1=cost.size(),l2=cost[0].size();
+        int mask=0;
+        unordered_map<int,int> M;
+        int result=helper(0,cost,mask,M,l1,l2);
+        return result;
+    }
+};
