@@ -1,0 +1,39 @@
+class Solution {
+public:
+    bool checkZeroOnes(string s) {
+        bool flag=s[0]=='1';
+        int max_one=0, max_zero=0;
+        int cur_one=flag?1:0,cur_zero=flag?0:1;
+        if (s.length()==1) return flag;
+        for (size_t i=1;i<s.length();++i){
+            if (flag){
+                if (s[i]=='1'){
+                    ++cur_one;
+                }
+                else{
+                    max_one=max(max_one,cur_one);
+                    cur_one=0;
+                    cur_zero=1;
+                    flag=!flag;
+                }
+            }
+            else{
+                if (s[i]=='0'){
+                    ++cur_zero;
+                }
+                else{
+                    max_zero=max(max_zero,cur_zero);
+                    cur_zero=0;
+                    cur_one=1;
+                    flag=!flag;
+                }
+            }
+            if (i==s.length()-1){
+                if (flag) max_one=max(max_one,cur_one);
+                else max_zero=max(max_zero,cur_zero);
+            }
+        }
+        
+        return max_one>max_zero;
+    }
+};
