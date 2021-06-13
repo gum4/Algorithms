@@ -1,0 +1,30 @@
+class Solution {
+public:
+    unordered_map<string, bool> M;
+    bool helper (string l, string r){
+        //cout<<l<<" "<<r<<endl;
+        string tmpS = l+" "+r;
+        if (M.count(tmpS)) return M[tmpS];
+        if (l.length()!=r.length()) return M[tmpS] = false;
+        if (l==r) return M[tmpS] = true;
+        string str1 = l, str2 = r;
+        sort(str1.begin(), str1.end());
+        sort(str2.begin(), str2.end());
+        if (str1 != str2) return M[tmpS] = false;
+        for (int i=1;i<l.length();i++){
+            string s11 = l.substr(0, i);
+            string s12 = l.substr(i);
+            string s21 = r.substr(0, i);
+            string s22 = r.substr(i);
+            if (helper(s11, s21) && helper(s12,s22)) return M[tmpS] = true;
+            s21 = r.substr(l.length()-i);
+            s22 = r.substr(0,l.length()-i);
+            if (helper(s11, s21) && helper(s12,s22)) return M[tmpS] = true;
+        }
+        return M[tmpS] = false;
+    }
+    bool isScramble(string s1, string s2) {
+        if (s1==s2) return true;
+        return helper(s1,s2);
+    }
+};
