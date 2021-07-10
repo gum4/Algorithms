@@ -1,0 +1,23 @@
+class Solution {
+public:
+    
+    void dfs (string s, vector<string>& wd, vector<string>& res, string & cur){
+        if (s.empty()){
+            res.push_back(cur);
+        }
+        for (string str: wd){
+            int len = str.length();
+            if (s.substr(0,len) != str) continue;
+            string tmp = cur;
+            cur += (len == s.length()) ? str : str + " ";
+            dfs(s.substr(len), wd, res, cur);
+            cur = tmp;
+        }
+    }
+    vector<string> wordBreak(string s, vector<string>& wordDict) {
+        vector<string> res; 
+        string cur = "";
+        dfs (s, wordDict,res, cur);
+        return res;
+    }
+};
